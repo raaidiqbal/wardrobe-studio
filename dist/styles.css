@@ -39,28 +39,36 @@ h1 em{font-family:Georgia,serif;font-size:1.04em;font-weight:400;letter-spacing:
 .rack-nav{display:flex;gap:5px}
 .rack-nav button{width:34px;height:34px;border:1px solid #c5c5c3;border-radius:50%;background:transparent;font-size:18px;line-height:1}
 .rack-nav button:hover{background:var(--ink);border-color:var(--ink);color:white}
-.rack-viewport{height:476px;overflow-x:auto;overflow-y:hidden;position:relative;scrollbar-width:thin;scrollbar-color:#b9b8b4 transparent;scroll-snap-type:x proximity}
+.rack-viewport{height:400px;overflow-x:auto;overflow-y:hidden;position:relative;scrollbar-width:thin;scrollbar-color:#b9b8b4 transparent;scroll-snap-type:x proximity;background:radial-gradient(ellipse at 50% 12%,#fff8,transparent 67%),linear-gradient(180deg,#edeae4,#e8e5df)}
 .rack-rail{position:absolute;top:20px;left:0;min-width:1040px;width:100%;height:3px;background:linear-gradient(#9e9d9b,#c8c7c3 38%,#777876);box-shadow:0 3px 4px #595b5b20}
 .rack-rail::before,.rack-rail::after{content:"";position:absolute;top:-24px;width:2px;height:74px;background:#9e9d99}
 .rack-rail::before{left:22px}.rack-rail::after{right:22px}
-.rack-items{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));height:440px;min-width:1040px;position:relative;z-index:1;padding:0 36px}
+.rack-items{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));height:365px;min-width:1225px;position:relative;z-index:1;padding:0 36px}
 .garment-slot{position:relative;z-index:1;min-width:0;scroll-snap-align:center}
 .garment-slot.is-selected{z-index:3}
 .garment-card{position:relative;width:100%;max-width:225px;height:100%;margin:0 auto;border:0;background:transparent;padding:0 2px;color:inherit;text-align:center;display:flex;flex-direction:column;align-items:center}
-.garment-card::before{content:"";position:absolute;top:48px;bottom:83px;left:0;right:0;border:1px solid transparent;transition:border-color .3s,box-shadow .3s;pointer-events:none}
-.garment-card.is-selected::before{border-color:#8090ea;box-shadow:0 0 0 5px #4962e309}
-.hanger{width:76px;height:72px;flex:none;position:relative;z-index:2;overflow:visible}
-.hanger path{fill:none;stroke:#686866;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round}
-.garment-index{position:absolute;top:72px;z-index:4;font-size:9px;letter-spacing:.13em;font-weight:700;color:#fff;background:var(--ink);padding:3px 7px;opacity:0;transform:translateY(7px);transition:opacity .3s,transform .3s}
+.garment-card::before{content:"";position:absolute;top:35px;height:220px;left:0;right:0;background:radial-gradient(ellipse at 50% 28%,#fff7,transparent 70%);border:1px solid transparent;opacity:0;transition:opacity .35s,border-color .35s;pointer-events:none}
+.garment-card.is-selected::before{border-color:#8090ea88;opacity:1}
+.hanger-assembly{position:absolute;top:18px;left:50%;width:min(100%,240px);height:345px;transform:translateX(-50%) perspective(850px) rotateY(-54deg) rotateZ(-1.2deg) scale(.97);transform-origin:50% 1%;transition:transform .7s cubic-bezier(.2,.75,.15,1),filter .7s;backface-visibility:hidden;filter:drop-shadow(15px 17px 10px #2b2a2a35)}
+.garment-card.is-before .hanger-assembly{transform:translateX(-50%) perspective(850px) rotateY(54deg) rotateZ(1.2deg) scale(.97)}
+.garment-card.is-selected .hanger-assembly{transform:translateX(-50%) perspective(850px) rotateY(0deg) translateY(-5px) scale(1.12);filter:drop-shadow(13px 22px 14px #2b2a2a50)}
+.garment-card:not(.is-selected):hover .hanger-assembly{transform:translateX(-50%) perspective(850px) rotateY(-28deg) scale(1.03)}
+.garment-card.is-before:not(.is-selected):hover .hanger-assembly{transform:translateX(-50%) perspective(850px) rotateY(28deg) scale(1.03)}
+.hanger-swing{display:block;width:100%;height:100%;position:relative;transform-origin:50% 0}
+.hanger-swing.is-wobbling{animation:hanger-wobble .95s cubic-bezier(.2,.65,.25,1) var(--wobble-delay,0ms) both}
+@keyframes hanger-wobble{0%,100%{transform:rotateZ(0)}18%{transform:rotateZ(4deg)}43%{transform:rotateZ(-2.8deg)}67%{transform:rotateZ(1.35deg)}84%{transform:rotateZ(-.45deg)}}
+.hanger{position:absolute;top:0;left:50%;width:104px;height:78px;transform:translateX(-50%);z-index:1;overflow:visible;filter:drop-shadow(2px 4px 2px #29262133)}
+.hanger-hook{fill:none;stroke:#777773;stroke-width:3;stroke-linecap:round}
+.hanger-wood{fill:#b9a187;stroke:#85725f;stroke-width:2;stroke-linejoin:round}
+.hanger-bar{fill:none;stroke:#8b7968;stroke-width:4;stroke-linecap:round}
+.hanger-clip{fill:none;stroke:#817c76;stroke-width:4;stroke-linecap:round}
+.garment-art{position:absolute;top:-10px;left:50%;width:100%;height:286px;transform:translateX(-50%);z-index:2;pointer-events:none}
+.garment-photo,.garment-photo img{display:block;width:100%;height:100%}
+.garment-photo img{object-fit:contain;pointer-events:none}
+.garment-card[data-id="navy-fuzzy-knit"] .garment-photo img{transform:translateY(-22px) scale(1.2)}
+.garment-card.is-bottoms .garment-art{top:0;height:296px;width:86%}
+.garment-index{position:absolute;top:363px;z-index:4;font-size:9px;letter-spacing:.13em;font-weight:700;color:#fff;background:var(--ink);padding:3px 7px;opacity:0;transform:translateY(7px);transition:opacity .3s,transform .3s}
 .garment-card.is-selected .garment-index{opacity:1;transform:translateY(0)}
-.garment-art{width:min(100%,230px);height:300px;flex:none;display:flex;align-items:center;justify-content:center;margin-top:-52px;transform:perspective(850px) rotateY(-64deg) scale(.93);transform-origin:50% 11%;transition:transform .68s cubic-bezier(.2,.75,.15,1),filter .68s;filter:drop-shadow(12px 18px 10px #393b4138);backface-visibility:hidden}
-.garment-card.is-before .garment-art{transform:perspective(850px) rotateY(64deg) scale(.93)}
-.garment-card.is-selected .garment-art{transform:perspective(850px) rotateY(0deg) translateY(-9px) scale(1.13);filter:drop-shadow(7px 24px 16px #393b4140)}
-.garment-card:not(.is-selected):hover .garment-art{transform:perspective(850px) rotateY(-28deg) scale(1.02)}
-.garment-card.is-before:not(.is-selected):hover .garment-art{transform:perspective(850px) rotateY(28deg) scale(1.02)}
-.garment-art svg{height:100%;width:100%;overflow:visible}
-.garment-photo{position:relative;display:block;width:100%;height:100%}
-.garment-photo img{display:block;width:100%;height:100%;object-fit:contain;pointer-events:none}
 .garment-label{margin-top:auto;margin-bottom:12px;font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;white-space:nowrap;color:#696a6b}
 .garment-card.is-selected .garment-label{color:var(--blue)}
 .rack-floor{position:absolute;left:0;bottom:0;width:100%;min-width:1040px;height:37px;background:linear-gradient(transparent,#d7d3cc75);pointer-events:none}
@@ -92,5 +100,5 @@ h1 em{font-family:Georgia,serif;font-size:1.04em;font-weight:400;letter-spacing:
 .clear-button span{margin-left:10px;font-size:16px;line-height:.8}
 .site-footer{display:flex;justify-content:space-between;gap:20px;padding:30px clamp(24px,4.2vw,70px) 44px;font-size:9px;font-weight:700;letter-spacing:.13em;color:#999b9e;text-transform:uppercase}
 @media(max-width:850px){.header-note{display:none}.site-header nav{margin-left:auto;margin-right:0}.intro{align-items:start}.rack-toolbar{gap:10px;flex-wrap:wrap;height:auto;padding-block:16px}.rack-title{width:100%}.filters{margin-left:0}.rack-nav{margin-left:auto}.detail-section{grid-template-columns:1fr}.piece-detail{border-right:0;border-bottom:1px solid var(--line)}}
-@media(max-width:600px){.site-header{height:68px;padding-inline:20px}.wordmark{font-size:20px}.site-header nav{gap:17px;font-size:9px}.site-header nav a{height:68px}.intro{display:block;padding:48px 23px 39px}.intro h1{font-size:clamp(45px,10vw,62px)}.intro-copy{margin-top:24px;max-width:330px}.rack-section,.detail-section{margin-inline:0}.rack-toolbar{padding-inline:18px}.rack-title{font-size:10px}.filters{gap:0}.filter{padding:6px 10px;font-size:10px}.rack-nav button{width:30px;height:30px}.rack-viewport{height:450px}.rack-items{height:420px}.garment-art{height:280px}.rack-footer{padding-inline:18px;font-size:8px}.rack-footer span:first-child{max-width:210px}.piece-detail,.look-panel{padding:28px 23px}.detail-actions{flex-wrap:wrap;gap:15px}.site-footer{padding:26px 23px;display:block;line-height:1.9}}
-@media(prefers-reduced-motion:reduce){:root{scroll-behavior:auto}.garment-art,.garment-card::before,.garment-index{transition:none}}
+@media(max-width:600px){.site-header{height:68px;padding-inline:20px}.wordmark{font-size:20px}.site-header nav{gap:17px;font-size:9px}.site-header nav a{height:68px}.intro{display:block;padding:48px 23px 39px}.intro h1{font-size:clamp(45px,10vw,62px)}.intro-copy{margin-top:24px;max-width:330px}.rack-section,.detail-section{margin-inline:0}.rack-toolbar{padding-inline:18px}.rack-title{font-size:10px}.filters{gap:0}.filter{padding:6px 10px;font-size:10px}.rack-nav button{width:30px;height:30px}.rack-viewport{height:400px}.rack-items{height:365px}.hanger-assembly{height:330px}.garment-art{height:275px}.garment-card.is-bottoms .garment-art{height:285px}.garment-index{top:310px}.rack-footer{padding-inline:18px;font-size:8px}.rack-footer span:first-child{max-width:210px}.piece-detail,.look-panel{padding:28px 23px}.detail-actions{flex-wrap:wrap;gap:15px}.site-footer{padding:26px 23px;display:block;line-height:1.9}}
+@media(prefers-reduced-motion:reduce){:root{scroll-behavior:auto}.hanger-assembly,.garment-card::before,.garment-index{transition:none}.hanger-swing.is-wobbling{animation:none}}
