@@ -2,12 +2,13 @@ const pieces = [
   { id: 'cloud-bomber', name: 'Cloud Bomber', type: 'Lightweight layer', tone: 'Stone grey', category: 'layers', shape: 'bomber', color: '#a9aaa5', light: '#d9d9d3', dark: '#777a78', description: 'A quiet outer layer that goes with almost anything.' },
   { id: 'midnight-jacket', name: 'Midnight Jacket', type: 'Everyday outerwear', tone: 'Washed black', category: 'layers', shape: 'jacket', color: '#292b31', light: '#50545a', dark: '#17191d', description: 'A little structure for days that need it.' },
   { id: 'sea-glass-hoodie', name: 'Sea Glass Hoodie', type: 'Relaxed layer', tone: 'Soft sage', category: 'tops', shape: 'hoodie', color: '#527a69', light: '#89a996', dark: '#315648', description: 'A lived-in layer for easy mornings and long walks home.' },
+  { id: 'navy-fuzzy-knit', name: 'Navy Fuzzy Knit', type: 'Textured sweater', tone: 'Deep navy', category: 'tops', image: './assets/navy-fuzzy-knit-cutout.png', color: '#111a35', description: 'A soft, richly textured knit that gives a simple outfit some depth.' },
   { id: 'oat-knit', name: 'Oat Knit', type: 'Textured sweater', tone: 'Warm ivory', category: 'tops', shape: 'sweater', color: '#dad1bb', light: '#f1e9d7', dark: '#a99d89', description: 'Soft texture and a gentle neutral that brightens the rail.' },
   { id: 'merlot-overshirt', name: 'Merlot Overshirt', type: 'Button-up layer', tone: 'Deep berry', category: 'layers', shape: 'shirt', color: '#8a5960', light: '#bd858b', dark: '#623d45', description: 'The one piece that makes a simple outfit feel intentional.' },
   { id: 'charcoal-trouser', name: 'Charcoal Trouser', type: 'Relaxed straight leg', tone: 'Graphite', category: 'bottoms', shape: 'trouser', color: '#656a6d', light: '#949b9d', dark: '#3d4346', description: 'A clean line with room to move through the day.' },
 ];
 
-const state = { filter: 'all', selectedId: 'sea-glass-hoodie', look: new Set() };
+const state = { filter: 'all', selectedId: 'navy-fuzzy-knit', look: new Set() };
 const rackItems = document.querySelector('#rack-items');
 const rackViewport = document.querySelector('#rack-viewport');
 const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
@@ -52,9 +53,10 @@ function visiblePieces() {
 
 function renderRack() {
   const visible = visiblePieces();
+  document.querySelector('.rack-total').textContent = `${String(visible.length).padStart(2, '0')} PIECES`;
   rackItems.style.gridTemplateColumns = `repeat(${visible.length}, minmax(0, 1fr))`;
   rackItems.style.minWidth = `${Math.max(visible.length * 175, 600)}px`;
-  rackItems.innerHTML = visible.map((piece, index) => `<div class="garment-slot" data-id="${piece.id}"><button type="button" class="garment-card" data-id="${piece.id}" aria-pressed="false" aria-label="View ${piece.name}">${hangerSvg()}<span class="garment-index">IN FOCUS</span><span class="garment-art">${garmentSvg(piece)}</span><span class="garment-label">${String(index + 1).padStart(2, '0')} / ${piece.name}</span></button></div>`).join('');
+  rackItems.innerHTML = visible.map((piece, index) => `<div class="garment-slot" data-id="${piece.id}"><button type="button" class="garment-card" data-id="${piece.id}" aria-pressed="false" aria-label="View ${piece.name}">${hangerSvg()}<span class="garment-index">IN FOCUS</span><span class="garment-art">${piece.image ? `<span class="garment-photo"><img src="${piece.image}" alt="" loading="eager" decoding="async"></span>` : garmentSvg(piece)}</span><span class="garment-label">${String(index + 1).padStart(2, '0')} / ${piece.name}</span></button></div>`).join('');
   updateSelection();
 }
 

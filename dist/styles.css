@@ -59,6 +59,8 @@ h1 em{font-family:Georgia,serif;font-size:1.04em;font-weight:400;letter-spacing:
 .garment-card:not(.is-selected):hover .garment-art{transform:perspective(850px) rotateY(-28deg) scale(1.02)}
 .garment-card.is-before:not(.is-selected):hover .garment-art{transform:perspective(850px) rotateY(28deg) scale(1.02)}
 .garment-art svg{height:100%;width:100%;overflow:visible}
+.garment-photo{position:relative;display:block;width:100%;height:100%}
+.garment-photo img{display:block;width:100%;height:100%;object-fit:contain;pointer-events:none}
 .garment-label{margin-top:auto;margin-bottom:12px;font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;white-space:nowrap;color:#696a6b}
 .garment-card.is-selected .garment-label{color:var(--blue)}
 .rack-floor{position:absolute;left:0;bottom:0;width:100%;min-width:1040px;height:37px;background:linear-gradient(transparent,#d7d3cc75);pointer-events:none}
