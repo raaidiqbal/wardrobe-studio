@@ -28,12 +28,11 @@ function visiblePieces() {
 function renderRack() {
   const visible = visiblePieces();
   document.querySelector('.rack-total').textContent = `${String(visible.length).padStart(2, '0')} PIECES`;
-  rackItems.style.gridTemplateColumns = `repeat(${visible.length}, minmax(0, 1fr))`;
-  const rackWidth = `${Math.max(visible.length * 175, 600)}px`;
+  const rackWidth = `${Math.max(visible.length * 84 + 120, 650)}px`;
   rackItems.style.minWidth = rackWidth;
   document.querySelector('.rack-rail').style.minWidth = rackWidth;
   document.querySelector('.rack-floor').style.minWidth = rackWidth;
-  rackItems.innerHTML = visible.map((piece, index) => `<div class="garment-slot" data-id="${piece.id}"><button type="button" class="garment-card${piece.category === 'bottoms' ? ' is-bottoms' : ''}" data-id="${piece.id}" aria-pressed="false" aria-label="View ${piece.name}"><span class="hanger-assembly"><span class="hanger-swing">${hangerSvg(piece)}<span class="garment-art"><span class="garment-photo"><img src="${piece.image}" alt="" loading="eager" decoding="async"></span></span></span></span><span class="garment-index">IN FOCUS</span><span class="garment-label">${String(index + 1).padStart(2, '0')} / ${piece.name}</span></button></div>`).join('');
+  rackItems.innerHTML = visible.map((piece, index) => `<div class="garment-slot" data-id="${piece.id}"><button type="button" class="garment-card${piece.category === 'bottoms' ? ' is-bottoms' : ''}" data-id="${piece.id}" aria-pressed="false" aria-label="View ${piece.name}"><span class="hanger-assembly"><span class="hanger-swing">${hangerSvg(piece)}<span class="garment-art"><span class="garment-photo"><img src="${piece.image}" alt="" loading="eager" decoding="async"></span></span></span></span><span class="garment-index">IN FOCUS</span><span class="garment-label">${piece.name}</span></button></div>`).join('');
   updateSelection();
 }
 
@@ -70,9 +69,11 @@ function centerInRack(button) {
   const buttonRect = button.getBoundingClientRect();
   const rackRect = rackViewport.getBoundingClientRect();
   const left = rackViewport.scrollLeft + buttonRect.left - rackRect.left - (rackViewport.clientWidth - buttonRect.width) / 2;
+  centerUntil = performance.now() + 900;
   rackViewport.scrollTo({ left, behavior: reduceMotion.matches ? 'instant' : 'smooth' });
 }
 
+let centerUntil = 0;
 function selectPiece(id, options = {}) {
   if (!visiblePieces().some(piece => piece.id === id)) return;
   state.selectedId = id;
@@ -118,13 +119,42 @@ rackItems.addEventListener('click', event => {
   const button = event.target.closest('.garment-card');
   if (button) selectPiece(button.dataset.id, { scroll: true });
 });
+let hoverTimer;
+rackItems.addEventListener('pointerover', event => {
+  if (event.pointerType !== 'mouse') return;
+  const button = event.target.closest('.garment-card');
+  if (button?.contains(event.relatedTarget)) return;
+  if (!button || button.dataset.id === state.selectedId) return;
+  clearTimeout(hoverTimer);
+  hoverTimer = setTimeout(() => selectPiece(button.dataset.id), 90);
+});
+rackItems.addEventListener('pointerout', event => {
+  const button = event.target.closest('.garment-card');
+  if (button && !button.contains(event.relatedTarget)) clearTimeout(hoverTimer);
+});
 rackItems.addEventListener('keydown', event => {
   if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
     event.preventDefault();
     move(event.key === 'ArrowRight' ? 1 : -1);
   }
 });
-rackViewport.addEventListener('scroll', () => wobbleRack(), { passive: true });
+let scrollSettle;
+rackViewport.addEventListener('scroll', () => {
+  wobbleRack();
+  if (performance.now() < centerUntil) return;
+  clearTimeout(scrollSettle);
+  scrollSettle = setTimeout(() => {
+    const viewport = rackViewport.getBoundingClientRect();
+    const center = viewport.left + viewport.width / 2;
+    const cards = [...rackItems.querySelectorAll('.garment-card')];
+    const nearest = cards.reduce((best, card) => {
+      const rect = card.getBoundingClientRect();
+      const distance = Math.abs(rect.left + rect.width / 2 - center);
+      return distance < best.distance ? { card, distance } : best;
+    }, { card: null, distance: Infinity }).card;
+    if (nearest && nearest.dataset.id !== state.selectedId) selectPiece(nearest.dataset.id);
+  }, 180);
+}, { passive: true });
 document.querySelector('#previous').addEventListener('click', () => move(-1));
 document.querySelector('#next').addEventListener('click', () => move(1));
 document.querySelectorAll('.filter').forEach(button => button.addEventListener('click', () => {
