@@ -1,0 +1,94 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@500;600;700;800&display=swap');
+
+:root{--paper:#f6f4ef;--warm:#ece9e3;--ink:#17191e;--muted:#75787d;--line:#d9d7d1;--blue:#304ef5;--blue-soft:#e9ecff;font-family:'DM Sans',Arial,sans-serif;color:var(--ink);background:var(--paper);font-synthesis:none;scroll-behavior:smooth}
+*{box-sizing:border-box}
+body{margin:0}
+button,a{font:inherit}
+button{cursor:pointer}
+a{color:inherit;text-decoration:none}
+button:focus-visible,a:focus-visible{outline:2px solid var(--blue);outline-offset:4px}
+button:disabled{cursor:not-allowed;opacity:.35}
+.site-shell{max-width:1680px;margin:auto}
+.site-header{height:78px;padding:0 clamp(24px,4.2vw,70px);display:flex;align-items:center;gap:45px;border-bottom:1px solid var(--line)}
+.wordmark{font:800 23px/1 'Manrope',sans-serif;letter-spacing:-.09em;white-space:nowrap}
+.wordmark span,.look-heading h2 span{color:var(--blue)}
+.site-header nav{display:flex;align-items:center;gap:35px;margin:auto;text-transform:uppercase;letter-spacing:.14em;font-size:10px;font-weight:700;white-space:nowrap}
+.site-header nav a{display:inline-flex;align-items:center;gap:8px;height:78px;border-bottom:2px solid transparent}
+.site-header nav a.active{border-color:var(--blue)}
+.site-header nav a:hover{color:var(--blue)}
+.site-header nav span{font-size:9px;color:var(--blue)}
+.header-note{display:flex;align-items:center;gap:9px;font-size:10px;font-weight:700;letter-spacing:.15em;color:var(--muted);white-space:nowrap}
+.status-dot{width:6px;height:6px;border-radius:50%;background:var(--blue);box-shadow:0 0 0 4px var(--blue-soft)}
+.intro{display:flex;align-items:end;justify-content:space-between;gap:50px;padding:64px clamp(24px,4.2vw,70px) 54px}
+.eyebrow{font-size:10px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--blue)}
+.eyebrow span{color:var(--muted);margin-left:12px}
+h1,h2,p{margin:0}
+h1,h2{font-family:'Manrope',Arial,sans-serif}
+h1{font-size:clamp(48px,5vw,86px);font-weight:700;line-height:1.04;letter-spacing:-.07em;margin-top:20px}
+h1 em{font-family:Georgia,serif;font-size:1.04em;font-weight:400;letter-spacing:-.055em}
+.intro-copy{max-width:285px;padding-bottom:7px;font-size:14px;line-height:1.75;color:#5b5d60}
+.rack-section{margin:0 clamp(16px,2.5vw,42px);background:var(--warm);border:1px solid #e0ddd6}
+.rack-toolbar{height:73px;padding:0 clamp(18px,2.2vw,36px);display:flex;align-items:center;gap:35px;border-bottom:1px solid var(--line)}
+.rack-title{display:flex;align-items:center;gap:11px;font-size:11px;font-weight:800;letter-spacing:.18em;white-space:nowrap}
+.rack-title-line{width:20px;height:2px;background:var(--blue)}
+.rack-total{font-size:9px;letter-spacing:.12em;color:var(--muted);font-weight:700;margin-left:7px}
+.filters{display:flex;align-items:center;gap:6px;margin:auto}
+.filter{border:1px solid transparent;background:transparent;border-radius:100px;padding:7px 14px;color:#767575;font-size:11px;font-weight:700;white-space:nowrap}
+.filter:hover{color:var(--ink)}
+.filter.is-active{border-color:#c5c5c3;color:var(--ink);background:#f8f7f4}
+.rack-nav{display:flex;gap:5px}
+.rack-nav button{width:34px;height:34px;border:1px solid #c5c5c3;border-radius:50%;background:transparent;font-size:18px;line-height:1}
+.rack-nav button:hover{background:var(--ink);border-color:var(--ink);color:white}
+.rack-viewport{height:476px;overflow-x:auto;overflow-y:hidden;position:relative;scrollbar-width:thin;scrollbar-color:#b9b8b4 transparent;scroll-snap-type:x proximity}
+.rack-rail{position:absolute;top:20px;left:0;min-width:1040px;width:100%;height:3px;background:linear-gradient(#9e9d9b,#c8c7c3 38%,#777876);box-shadow:0 3px 4px #595b5b20}
+.rack-rail::before,.rack-rail::after{content:"";position:absolute;top:-24px;width:2px;height:74px;background:#9e9d99}
+.rack-rail::before{left:22px}.rack-rail::after{right:22px}
+.rack-items{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));height:440px;min-width:1040px;position:relative;z-index:1;padding:0 36px}
+.garment-slot{position:relative;z-index:1;min-width:0;scroll-snap-align:center}
+.garment-slot.is-selected{z-index:3}
+.garment-card{position:relative;width:100%;max-width:225px;height:100%;margin:0 auto;border:0;background:transparent;padding:0 2px;color:inherit;text-align:center;display:flex;flex-direction:column;align-items:center}
+.garment-card::before{content:"";position:absolute;top:48px;bottom:83px;left:0;right:0;border:1px solid transparent;transition:border-color .3s,box-shadow .3s;pointer-events:none}
+.garment-card.is-selected::before{border-color:#8090ea;box-shadow:0 0 0 5px #4962e309}
+.hanger{width:76px;height:72px;flex:none;position:relative;z-index:2;overflow:visible}
+.hanger path{fill:none;stroke:#686866;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round}
+.garment-index{position:absolute;top:72px;z-index:4;font-size:9px;letter-spacing:.13em;font-weight:700;color:#fff;background:var(--ink);padding:3px 7px;opacity:0;transform:translateY(7px);transition:opacity .3s,transform .3s}
+.garment-card.is-selected .garment-index{opacity:1;transform:translateY(0)}
+.garment-art{width:min(100%,230px);height:300px;flex:none;display:flex;align-items:center;justify-content:center;margin-top:-52px;transform:perspective(850px) rotateY(-64deg) scale(.93);transform-origin:50% 11%;transition:transform .68s cubic-bezier(.2,.75,.15,1),filter .68s;filter:drop-shadow(12px 18px 10px #393b4138);backface-visibility:hidden}
+.garment-card.is-before .garment-art{transform:perspective(850px) rotateY(64deg) scale(.93)}
+.garment-card.is-selected .garment-art{transform:perspective(850px) rotateY(0deg) translateY(-9px) scale(1.13);filter:drop-shadow(7px 24px 16px #393b4140)}
+.garment-card:not(.is-selected):hover .garment-art{transform:perspective(850px) rotateY(-28deg) scale(1.02)}
+.garment-card.is-before:not(.is-selected):hover .garment-art{transform:perspective(850px) rotateY(28deg) scale(1.02)}
+.garment-art svg{height:100%;width:100%;overflow:visible}
+.garment-label{margin-top:auto;margin-bottom:12px;font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;white-space:nowrap;color:#696a6b}
+.garment-card.is-selected .garment-label{color:var(--blue)}
+.rack-floor{position:absolute;left:0;bottom:0;width:100%;min-width:1040px;height:37px;background:linear-gradient(transparent,#d7d3cc75);pointer-events:none}
+.rack-footer{height:42px;padding:0 clamp(18px,2.2vw,36px);display:flex;align-items:center;justify-content:space-between;border-top:1px solid var(--line);font-size:9px;font-weight:700;letter-spacing:.17em;color:#777a7d}
+.rack-footer #rack-position{color:var(--blue)}
+.detail-section{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(280px,.65fr);gap:0;margin:0 clamp(16px,2.5vw,42px);border:1px solid var(--line);border-top:0;background:#faf9f6}
+.piece-detail{padding:38px clamp(25px,4vw,65px) 44px;border-right:1px solid var(--line)}
+.detail-eyebrow{display:flex;justify-content:space-between;max-width:540px}
+.detail-head{display:flex;align-items:center;justify-content:space-between;gap:18px;margin-top:24px;max-width:540px}
+.detail-head h2{font-size:clamp(29px,3vw,44px);line-height:1.15;letter-spacing:-.06em}
+.detail-head p{font-size:12px;color:var(--muted);margin-top:7px}
+.swatch{width:35px;height:35px;border:1px solid #0002;border-radius:50%;box-shadow:inset 3px 3px 6px #fff7;flex:none}
+.detail-description{font-size:14px;line-height:1.7;color:#696b6d;max-width:500px;margin-top:19px}
+.detail-actions{display:flex;align-items:center;gap:25px;margin-top:26px}
+.add-button{background:var(--ink);color:white;border:1px solid var(--ink);padding:13px 18px;font-size:12px;font-weight:700;display:flex;align-items:center;gap:27px;min-height:46px}
+.add-button:hover{background:var(--blue);border-color:var(--blue)}
+.add-button:disabled{opacity:.6;background:#5b675f;border-color:#5b675f;cursor:default}
+.detail-tip{font-size:11px;color:#999a9b}
+.look-panel{padding:38px clamp(24px,3vw,48px) 32px;background:#f1f2fa}
+.look-heading{display:flex;align-items:end;justify-content:space-between;gap:15px}
+.look-heading h2{font-size:24px;letter-spacing:-.055em;margin-top:12px}
+.look-count{font-size:33px;line-height:1;font-weight:700;letter-spacing:-.07em;color:#c2c9f5}
+.look-content{min-height:95px;border-top:1px solid #d6d9eb;margin-top:21px;padding-top:17px}
+.look-content>p{max-width:240px;font-size:12px;line-height:1.6;color:#85889a}
+.look-items{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:6px}
+.look-items li{display:inline-flex;align-items:center;gap:8px;background:white;border:1px solid #d7dbf1;padding:7px 9px;font-size:11px;font-weight:700}
+.look-items .mini-swatch{width:9px;height:9px;border-radius:50%}
+.clear-button{border:0;border-bottom:1px solid #a5abc9;background:transparent;padding:0 0 3px;color:#606889;font-size:11px;font-weight:700}
+.clear-button span{margin-left:10px;font-size:16px;line-height:.8}
+.site-footer{display:flex;justify-content:space-between;gap:20px;padding:30px clamp(24px,4.2vw,70px) 44px;font-size:9px;font-weight:700;letter-spacing:.13em;color:#999b9e;text-transform:uppercase}
+@media(max-width:850px){.header-note{display:none}.site-header nav{margin-left:auto;margin-right:0}.intro{align-items:start}.rack-toolbar{gap:10px;flex-wrap:wrap;height:auto;padding-block:16px}.rack-title{width:100%}.filters{margin-left:0}.rack-nav{margin-left:auto}.detail-section{grid-template-columns:1fr}.piece-detail{border-right:0;border-bottom:1px solid var(--line)}}
+@media(max-width:600px){.site-header{height:68px;padding-inline:20px}.wordmark{font-size:20px}.site-header nav{gap:17px;font-size:9px}.site-header nav a{height:68px}.intro{display:block;padding:48px 23px 39px}.intro h1{font-size:clamp(45px,10vw,62px)}.intro-copy{margin-top:24px;max-width:330px}.rack-section,.detail-section{margin-inline:0}.rack-toolbar{padding-inline:18px}.rack-title{font-size:10px}.filters{gap:0}.filter{padding:6px 10px;font-size:10px}.rack-nav button{width:30px;height:30px}.rack-viewport{height:450px}.rack-items{height:420px}.garment-art{height:280px}.rack-footer{padding-inline:18px;font-size:8px}.rack-footer span:first-child{max-width:210px}.piece-detail,.look-panel{padding:28px 23px}.detail-actions{flex-wrap:wrap;gap:15px}.site-footer{padding:26px 23px;display:block;line-height:1.9}}
+@media(prefers-reduced-motion:reduce){:root{scroll-behavior:auto}.garment-art,.garment-card::before,.garment-index{transition:none}}

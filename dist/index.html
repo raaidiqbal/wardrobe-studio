@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#f6f4ef" />
+  <meta name="description" content="An interactive digital wardrobe concept. Browse clothing on a rack and turn each piece toward you." />
+  <title>Wardrobe Studio — The Rack</title>
+  <link rel="stylesheet" href="./styles.css" />
+  <script src="./app.js" defer></script>
+</head>
+<body>
+  <div class="site-shell">
+    <header class="site-header">
+      <a class="wordmark" href="#top" aria-label="Wardrobe Studio, back to top">wardrobe<span>.</span></a>
+      <nav aria-label="Main navigation"><a class="active" href="#rack">The rack</a><a href="#look">Today's look <span id="nav-count">0</span></a></nav>
+      <div class="header-note"><span class="status-dot" aria-hidden="true"></span> INTERACTIVE CONCEPT</div>
+    </header>
+
+    <main id="top">
+      <section class="intro" aria-labelledby="page-title">
+        <div class="intro-heading"><p class="eyebrow">YOUR CLOSET, REIMAGINED <span>— 001</span></p><h1 id="page-title">Get dressed with<br /><em>good instinct.</em></h1></div>
+        <p class="intro-copy">A little closer to the closet you wish you had. Explore the rail, turn a piece toward you, and collect what feels right today.</p>
+      </section>
+
+      <section class="rack-section" id="rack" aria-label="Interactive clothing rack">
+        <div class="rack-toolbar">
+          <div class="rack-title"><span class="rack-title-line" aria-hidden="true"></span><span>THE RACK</span><span class="rack-total">06 PIECES</span></div>
+          <div class="filters" role="group" aria-label="Filter clothing by type">
+            <button type="button" class="filter is-active" data-filter="all" aria-pressed="true">All pieces</button>
+            <button type="button" class="filter" data-filter="tops" aria-pressed="false">Tops</button>
+            <button type="button" class="filter" data-filter="layers" aria-pressed="false">Layers</button>
+            <button type="button" class="filter" data-filter="bottoms" aria-pressed="false">Bottoms</button>
+          </div>
+          <div class="rack-nav" aria-label="Browse garments"><button type="button" id="previous" aria-label="Previous garment">←</button><button type="button" id="next" aria-label="Next garment">→</button></div>
+        </div>
+        <div class="rack-viewport" id="rack-viewport">
+          <div class="rack-rail" aria-hidden="true"></div>
+          <div class="rack-items" id="rack-items"></div>
+          <div class="rack-floor" aria-hidden="true"></div>
+        </div>
+        <div class="rack-footer"><span>CLICK A PIECE TO TURN IT TOWARD YOU</span><span id="rack-position">03 / 06</span></div>
+      </section>
+
+      <section class="detail-section" aria-label="Selected clothing and outfit">
+        <div class="piece-detail" aria-live="polite">
+          <p class="eyebrow detail-eyebrow">IN FOCUS <span id="detail-index">03 / 06</span></p>
+          <div class="detail-head"><div><h2 id="detail-name">Sea Glass Hoodie</h2><p id="detail-type">Relaxed layer · Soft sage</p></div><div class="swatch" id="detail-swatch" aria-label="Garment color"></div></div>
+          <p class="detail-description" id="detail-description">A lived-in layer for easy mornings and long walks home.</p>
+          <div class="detail-actions"><button type="button" id="add-to-look" class="add-button">Add to today's look <span aria-hidden="true">↗</span></button><span class="detail-tip">Use ← → to browse</span></div>
+        </div>
+        <aside class="look-panel" id="look" aria-labelledby="look-title">
+          <div class="look-heading"><div><p class="eyebrow">YOUR SELECTION</p><h2 id="look-title">Today's look<span>.</span></h2></div><span class="look-count" id="look-count">00</span></div>
+          <div id="look-content" class="look-content"><p>Nothing picked yet. Your outfit starts with one good piece.</p></div>
+          <button type="button" class="clear-button" id="clear-look" hidden>Clear selection <span aria-hidden="true">×</span></button>
+        </aside>
+      </section>
+    </main>
+
+    <footer class="site-footer"><span>WARDROBE STUDIO / FRONTEND CONCEPT</span><span>Sample garments for the prototype · Your own closet comes next</span></footer>
+  </div>
+</body>
+</html>
