@@ -32,7 +32,7 @@ function renderRack() {
   rackItems.style.minWidth = rackWidth;
   document.querySelector('.rack-rail').style.minWidth = rackWidth;
   document.querySelector('.rack-floor').style.minWidth = rackWidth;
-  rackItems.innerHTML = visible.map((piece, index) => `<div class="garment-slot" data-id="${piece.id}"><button type="button" class="garment-card${piece.category === 'bottoms' ? ' is-bottoms' : ''}" data-id="${piece.id}" aria-pressed="false" aria-label="View ${piece.name}"><span class="hanger-assembly"><span class="hanger-swing">${hangerSvg(piece)}<span class="garment-art"><span class="garment-photo"><img src="${piece.image}" alt="" loading="eager" decoding="async"></span></span></span></span><span class="garment-index">IN FOCUS</span><span class="garment-label">${piece.name}</span></button></div>`).join('');
+  rackItems.innerHTML = visible.map((piece, index) => `<div class="garment-slot" data-id="${piece.id}"><button type="button" class="garment-card${piece.category === 'bottoms' ? ' is-bottoms' : ''}" data-id="${piece.id}" aria-pressed="false" aria-label="View ${piece.name}"><span class="hanger-assembly"><span class="hanger-swing">${hangerSvg(piece)}<span class="garment-art"><span class="garment-photo"><img class="garment-front" src="${piece.image}" alt="" loading="eager" decoding="async"><img class="garment-side" src="./assets/${piece.id}-side.png" alt="" loading="eager" decoding="async"></span></span></span></span><span class="garment-index">IN FOCUS</span><span class="garment-label">${piece.name}</span></button></div>`).join('');
   updateSelection();
 }
 

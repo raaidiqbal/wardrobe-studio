@@ -65,7 +65,7 @@ h1 em{font-family:Georgia,serif;font-size:1.04em;font-weight:400;letter-spacing:
 .garment-art{position:absolute;top:-10px;left:50%;width:100%;height:286px;transform:translateX(-50%);z-index:2;pointer-events:none}
 .garment-photo,.garment-photo img{display:block;width:100%;height:100%}
 .garment-photo img{object-fit:contain;pointer-events:none}
-.garment-card[data-id="navy-fuzzy-knit"] .garment-photo img{transform:translateY(-22px) scale(1.2)}
+.garment-card[data-id="navy-fuzzy-knit"] .garment-front{transform:translateY(-22px) scale(1.2)}
 .garment-card.is-bottoms .garment-art{top:0;height:296px;width:86%}
 .garment-index{position:absolute;top:363px;z-index:4;font-size:9px;letter-spacing:.13em;font-weight:700;color:#fff;background:var(--ink);padding:3px 7px;opacity:0;transform:translateY(7px);transition:opacity .3s,transform .3s}
 .garment-card.is-selected .garment-index{opacity:1;transform:translateY(0)}
@@ -139,7 +139,7 @@ body{background:radial-gradient(ellipse at 50% 12%,#f7fbff 0,#dfeefa 58%,#d3e4f1
 .hanger-bar{stroke:#685346;stroke-width:2.5}
 .garment-art{top:-14px;width:190px;height:250px}
 .garment-card.is-bottoms .garment-art{top:-11px;height:262px;width:78%}
-.garment-card[data-id="navy-fuzzy-knit"] .garment-photo img{transform:translateY(-17px) scale(1.16)}
+.garment-card[data-id="navy-fuzzy-knit"] .garment-front{transform:translateY(-17px) scale(1.16)}
 .garment-index{display:none}
 .garment-label{position:absolute;top:314px;left:50%;width:190px;margin:0;transform:translateX(-50%);font-size:10px;letter-spacing:.03em;text-transform:none;font-weight:600;color:#737b7d;opacity:0;transition:opacity .3s}
 .garment-card.is-selected .garment-label{color:#4d5a60;opacity:1}
@@ -159,3 +159,15 @@ body{background:radial-gradient(ellipse at 50% 12%,#f7fbff 0,#dfeefa 58%,#d3e4f1
 .garment-card:focus-visible{outline:0}
 .garment-card:focus-visible .garment-label{opacity:1;text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:5px}
 @media(prefers-reduced-motion:reduce){.hanger-assembly,.garment-slot,.garment-label,.garment-card::before{transition:none}.hanger-swing.is-wobbling{animation:none}}
+.garment-photo{position:relative}
+.garment-photo .garment-front{position:absolute;inset:0;opacity:0;transition:opacity .25s ease}
+.garment-card.is-selected .garment-front{opacity:1;transition-delay:.12s}
+.garment-photo .garment-side{position:absolute;left:50%;top:0;width:160px;height:250px;object-fit:contain;opacity:1;transform:translateX(-50%);transition:opacity .24s ease .08s}
+.garment-card.is-before .garment-side{transform:translateX(-50%) scaleX(-1)}
+.garment-card.is-selected .garment-side{opacity:0;transition-delay:0s}
+.hanger-assembly{transform:translateX(-50%) perspective(960px) rotateY(-30deg) rotateZ(-.7deg)}
+.garment-card.is-before .hanger-assembly{transform:translateX(-50%) perspective(960px) rotateY(30deg) rotateZ(.7deg)}
+.garment-card:not(.is-selected):hover .hanger-assembly{transform:translateX(-50%) perspective(960px) rotateY(-18deg)}
+.garment-card.is-before:not(.is-selected):hover .hanger-assembly{transform:translateX(-50%) perspective(960px) rotateY(18deg)}
+@media(max-width:600px){.garment-photo .garment-side{height:245px}}
+@media(prefers-reduced-motion:reduce){.garment-front,.garment-side{transition:none!important}}
