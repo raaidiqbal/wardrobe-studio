@@ -171,3 +171,45 @@ body{background:radial-gradient(ellipse at 50% 12%,#f7fbff 0,#dfeefa 58%,#d3e4f1
 .garment-card.is-before:not(.is-selected):hover .hanger-assembly{transform:translateX(-50%) perspective(960px) rotateY(18deg)}
 @media(max-width:600px){.garment-photo .garment-side{height:245px}}
 @media(prefers-reduced-motion:reduce){.garment-front,.garment-side{transition:none!important}}
+
+/* The video canvas blends its white source against the dotted rack itself. */
+.rack-items,.garment-slot,.garment-slot.is-selected{z-index:auto}
+.garment-price{display:block;margin-top:4px;font-size:9px;color:#8c9595;font-weight:500;letter-spacing:0}
+.garment-card.is-selected .garment-price{color:#6b7475}
+.garment-card:not(.has-turn) .hanger-assembly{animation:rail-arrival .8s cubic-bezier(.2,.7,.2,1) var(--entry-delay,0ms) both}
+.garment-card.has-turn .hanger-assembly,.garment-card.has-turn.is-selected .hanger-assembly,.garment-card.has-turn.is-before .hanger-assembly{left:calc(50% - 130px);top:38px;width:260px;height:270px;transform:none;filter:none;backface-visibility:visible;transition:none}
+.garment-card.has-turn .hanger-swing{animation:none}
+.garment-card.has-turn .garment-art{left:0;top:0;width:260px;height:260px;transform:none;z-index:auto}
+.garment-card.has-turn .garment-photo{width:260px;height:260px}
+.garment-turn-canvas{display:block;width:260px;height:260px;mix-blend-mode:multiply;animation:canvas-arrival .8s cubic-bezier(.2,.7,.2,1) var(--entry-delay,0ms) both}
+@keyframes rail-arrival{from{opacity:0;translate:0 -32px}to{opacity:1;translate:0 0}}
+@keyframes canvas-arrival{from{opacity:0;transform:translateY(-32px)}to{opacity:1;transform:translateY(0)}}
+
+.dialog-open{overflow:hidden}
+.detail-overlay[hidden],#modal-availability[hidden],#modal-sample-note[hidden]{display:none}
+.detail-overlay{position:fixed;inset:0;z-index:20;display:grid;place-items:center;padding:22px}
+.detail-backdrop{position:absolute;inset:0;background:#14212bc2;backdrop-filter:blur(14px)}
+.detail-dialog{position:relative;width:min(100%,960px);max-height:min(92vh,850px);overflow:auto;background:#fbfcfb;box-shadow:0 32px 90px #08172061;animation:dialog-in .42s cubic-bezier(.18,.8,.23,1)}
+@keyframes dialog-in{from{opacity:0;transform:translateY(26px) rotate(-1deg)}to{opacity:1;transform:translateY(0) rotate(0)}}
+.dialog-top,.dialog-bottom{display:flex;align-items:center;justify-content:space-between;gap:15px;padding:16px 24px;border-bottom:1px solid #e2e6e5;font-size:10px;font-weight:700;letter-spacing:.13em;color:#7f8a8c}
+.dialog-top button,.dialog-bottom button{border:0;background:transparent;color:#172128;font-size:12px;font-weight:700;letter-spacing:0}
+.dialog-top button span{font-size:23px;vertical-align:-2px;margin-left:8px}
+.dialog-body{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(300px,.9fr);min-height:540px}
+.dialog-visual{display:grid;place-items:center;padding:30px;background:radial-gradient(ellipse at center,#fff 20%,#edf1f1 100%);min-height:520px}
+.dialog-visual img{display:block;width:min(100%,480px);max-height:66vh;object-fit:contain;animation:piece-swing .65s cubic-bezier(.2,.75,.15,1) both;transform-origin:50% 3%}
+@keyframes piece-swing{from{opacity:0;transform:rotate(-6deg) translateY(-18px)}60%{transform:rotate(2deg)}to{opacity:1;transform:rotate(0)}}
+.dialog-copy{padding:clamp(28px,5vw,66px) clamp(25px,4vw,58px);display:flex;flex-direction:column;align-items:flex-start}
+.dialog-kicker{margin-top:22px;color:#6d7a7c;font-size:12px}
+.dialog-copy h2{margin-top:10px;font-size:clamp(34px,4vw,52px);line-height:1.05;letter-spacing:-.065em}
+.dialog-copy>p:not(.eyebrow):not(.dialog-kicker):not(.dialog-price){margin-top:22px;color:#677276;font-size:14px;line-height:1.65}
+.dialog-price{margin-top:28px;font-size:22px;font-weight:700}
+#modal-availability,.dialog-add{min-height:46px;margin-top:18px;padding:13px 18px;background:#172128;color:#fff;font-size:12px;font-weight:700;display:inline-flex;align-items:center;justify-content:space-between;gap:38px;border:1px solid #172128}
+#modal-availability:hover,.dialog-add:hover{background:#304c5a}
+#modal-sample-note{font-size:12px;color:#879092;margin-top:16px}
+.dialog-add{background:transparent;color:#172128;margin-top:12px}
+.dialog-add:disabled{opacity:.6}
+.dialog-bottom{border-top:1px solid #e2e6e5;border-bottom:0}
+.dialog-bottom button{display:inline-flex;align-items:center;gap:8px}
+
+@media(max-width:600px){.garment-card.has-turn .hanger-assembly,.garment-card.has-turn.is-selected .hanger-assembly,.garment-card.has-turn.is-before .hanger-assembly{left:calc(50% - 120px);width:240px}.garment-card.has-turn .garment-art,.garment-card.has-turn .garment-photo,.garment-turn-canvas{width:240px;height:240px}.detail-overlay{padding:10px}.detail-dialog{max-height:96vh}.dialog-body{grid-template-columns:1fr}.dialog-visual{min-height:285px;padding:12px}.dialog-visual img{height:265px}.dialog-copy{padding:24px}.dialog-copy h2{font-size:32px}.dialog-bottom>span{display:none}}
+@media(prefers-reduced-motion:reduce){.garment-card:not(.has-turn) .hanger-assembly,.garment-turn-canvas,.detail-dialog,.dialog-visual img{animation:none!important}}

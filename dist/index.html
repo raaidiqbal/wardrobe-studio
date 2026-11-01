@@ -39,7 +39,7 @@
           <div class="rack-items" id="rack-items"></div>
           <div class="rack-floor" aria-hidden="true"></div>
         </div>
-        <div class="rack-footer"><span>HOVER OR CLICK TO BRING A PIECE FORWARD · SWIPE OR USE THE ARROWS TO BROWSE</span><span id="rack-position">04 / 07</span></div>
+        <div class="rack-footer"><span id="rack-current">HOVER A PIECE TO SEE IT TURN · CLICK FOR DETAILS</span><span id="rack-position">04 / 07</span></div>
       </section>
 
       <section class="detail-section" aria-label="Selected clothing and outfit">
@@ -57,7 +57,18 @@
       </section>
     </main>
 
-    <footer class="site-footer"><span>WARDROBE STUDIO / FRONTEND CONCEPT</span><span>Sample garment imagery + your navy knit · Your own closet comes next</span></footer>
+    <footer class="site-footer"><span>WARDROBE STUDIO / FRONTEND CONCEPT</span><span>Mutimer knit + concept samples · Your own closet comes next</span></footer>
+  </div>
+  <div class="detail-overlay" id="detail-overlay" hidden>
+    <div class="detail-backdrop" id="detail-backdrop"></div>
+    <section class="detail-dialog" role="dialog" aria-modal="true" aria-labelledby="modal-name">
+      <div class="dialog-top"><span>WARDROBE STUDIO / PIECE DETAILS</span><button type="button" id="modal-close" aria-label="Close details">Close <span aria-hidden="true">×</span></button></div>
+      <div class="dialog-body">
+        <div class="dialog-visual"><img id="modal-image" alt="" /></div>
+        <div class="dialog-copy"><p class="eyebrow" id="modal-counter">04 / 07</p><p class="dialog-kicker" id="modal-kicker"></p><h2 id="modal-name"></h2><p id="modal-description"></p><p class="dialog-price" id="modal-price"></p><a id="modal-availability" target="_blank" rel="noopener noreferrer">See availability <span aria-hidden="true">↗</span></a><span id="modal-sample-note" hidden>Concept sample · No retailer listing</span><button type="button" id="modal-add" class="dialog-add">Add to today's look <span aria-hidden="true">+</span></button></div>
+      </div>
+      <div class="dialog-bottom"><button type="button" id="modal-previous" aria-label="Previous piece">← <span>Previous</span></button><span>USE ← → TO BROWSE · ESC TO CLOSE</span><button type="button" id="modal-next" aria-label="Next piece"><span>Next</span> →</button></div>
+    </section>
   </div>
 </body>
 </html>

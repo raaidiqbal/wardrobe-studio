@@ -1,7 +1,9 @@
 # Wardrobe Studio
 
-Interactive clothing-rack frontend concept for an outfit assistant. The rack uses six photorealistic generated garment cutouts and a cutout of the user's navy sweater photo. Each sample has a separate side-view image so the resting garments retain fabric volume and hang naturally on the rail. Hovering, clicking, or using the arrows brings a piece forward in place, widens its slot, and briefly sways its hanger. Filters, keyboard navigation, mobile horizontal scrolling, and a temporary "today's look" selection work in the browser.
+Interactive clothing-rack frontend concept for an outfit assistant. One Mutimer Shaggy Mohair Knit uses a frame sequence from the supplied Kling clip; six generated concept samples use paired side/front cutouts. Garments rest side-on. Hovering opens a piece in its slot and leaving reverses the turn. Clicking opens a detail view with keyboard navigation. Filters, mobile horizontal scrolling, and a temporary "today's look" selection work in the browser.
 
 Run locally with a static server from `dist/`, for example `python -m http.server 4174 --directory dist`.
 
-The prototype has no AI service, clothing upload, account, saved wardrobe, or per-garment turn video yet. The side-to-front change uses CSS rotation and a short image blend; a filmed or generated turn sequence would be needed for realistic cloth movement through the turn.
+The prototype has no AI service, clothing upload, account, or saved wardrobe. Only the navy knit has a real turn sequence; the other pieces are marked as concept samples and have no invented price or availability link. The knit's A$260 retail price and availability link reflect Mutimer's Australian listing at build time and may change.
+
+To process another square side-to-front clip, install `numpy` and `imageio-ffmpeg`, then run `python scripts/process_turn.py <video.mp4> dist/frames/<piece-id>`. The script detects motion onset and a pose close to the final frame, exports 480px WebPs, and writes a manifest. Inspect the chosen bounds and endpoint frames for each new clip before adding its `turnFrames` count to `dist/app.js`.
