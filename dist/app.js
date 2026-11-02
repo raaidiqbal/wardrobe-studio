@@ -1,6 +1,6 @@
 const pieces = [
   { id: 'navy-fuzzy-knit', name: 'Shaggy Mohair Knit (Navy)', subtitle: 'Mutimer', type: 'Brushed mohair knit', tone: 'Deep navy', category: 'tops', image: './assets/navy-mutimer-front-cutout.png', sideImage: './assets/navy-mutimer-side.png', turnFrames: 62, frameVersion: 'hanger-stable-1', hangerTop: 40, blendFinalFront: false, color: '#111a35', description: 'An oversized, slightly cropped navy sweater with a brushed mohair finish and chest embroidery.' },
-  { id: 'cream-polo-sweater', name: 'Cream Cashmere Sweater', subtitle: 'Polo Ralph Lauren', type: 'Cable-knit cashmere', tone: 'Cream', category: 'tops', image: './assets/cream-polo-front-cutout.png', trueFront: './assets/cream-polo-front.png', sideImage: './assets/cream-polo-side.png', turnFrames: 57, frameVersion: 'mirror-1', color: '#e9e3cf', description: 'A cream cable-knit sweater with a classic crew neck and textured sleeves.' },
+  { id: 'cream-polo-sweater', name: 'Cream Cashmere Sweater', subtitle: 'Polo Ralph Lauren', type: 'Cable-knit cashmere', tone: 'Cream', category: 'tops', image: './assets/cream-polo-front-cutout.png', trueFront: './assets/cream-polo-front.png', labelPatch: { x: 222, y: 94, width: 37, height: 17 }, sideImage: './assets/cream-polo-side.png', turnFrames: 57, frameVersion: 'mirror-1', color: '#e9e3cf', description: 'A cream cable-knit sweater with a classic crew neck and textured sleeves.' },
 ];
 
 const state = { filter: 'all', selectedId: 'navy-fuzzy-knit', activeId: null, detailId: null, look: new Set() };
@@ -19,6 +19,7 @@ class TurnPlayer {
     this.raf = 0;
     this.hangerTop = piece.hangerTop;
     this.blendFinalFront = piece.blendFinalFront !== false;
+    this.labelPatch = piece.labelPatch;
     this.hangerOffsets = [];
     this.hookOffsets = [];
     if (this.hangerTop != null) {
@@ -98,11 +99,16 @@ class TurnPlayer {
     }
     const blend = Math.max(0, (index - (this.frames.length - 6)) / 5);
     if (blend && this.blendFinalFront && this.trueFront.complete && this.trueFront.naturalWidth) {
+      ctx.save();
+      if (this.labelPatch) {
+        const { x, y, width, height } = this.labelPatch;
+        ctx.beginPath();
+        ctx.roundRect(x, y, width, height, 3);
+        ctx.clip();
+      }
       ctx.globalAlpha = blend;
-      ctx.fillStyle = '#fff';
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
       ctx.drawImage(this.trueFront, 0, 0, canvas.width, canvas.height);
-      ctx.globalAlpha = 1;
+      ctx.restore();
     }
     return true;
   }
