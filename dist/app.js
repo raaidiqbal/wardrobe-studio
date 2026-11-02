@@ -1,11 +1,5 @@
 const pieces = [
-  { id: 'cloud-bomber', name: 'Cloud Bomber', type: 'Lightweight layer', tone: 'Stone grey', category: 'layers', image: './assets/cloud-bomber-photo.png', color: '#a9aaa5', description: 'A quiet outer layer that goes with almost anything.' },
-  { id: 'midnight-jacket', name: 'Midnight Jacket', type: 'Everyday outerwear', tone: 'Washed black', category: 'layers', image: './assets/midnight-jacket-photo.png', color: '#292b31', description: 'A little structure for days that need it.' },
-  { id: 'sea-glass-hoodie', name: 'Sea Glass Hoodie', type: 'Relaxed layer', tone: 'Soft sage', category: 'tops', image: './assets/sea-glass-hoodie-photo.png', color: '#527a69', description: 'A lived-in layer for easy mornings and long walks home.' },
   { id: 'navy-fuzzy-knit', name: 'Shaggy Mohair Knit (Navy)', type: 'Mutimer · brushed mohair knit', tone: 'Deep navy', category: 'tops', image: './assets/navy-mutimer-front-cutout.png', trueFront: './assets/navy-mutimer-front.png', sideImage: './assets/navy-mutimer-side.png', turnFrames: 62, price: 'A$260', availabilityUrl: 'https://mutimer.co/products/shaggy-mohair-knit-navy', color: '#111a35', description: 'An oversized, slightly cropped navy sweater with a brushed mohair finish and chest embroidery.' },
-  { id: 'oat-knit', name: 'Oat Knit', type: 'Textured sweater', tone: 'Warm ivory', category: 'tops', image: './assets/oat-knit-photo.png', color: '#dad1bb', description: 'Soft texture and a gentle neutral that brightens the rail.' },
-  { id: 'merlot-overshirt', name: 'Merlot Overshirt', type: 'Button-up layer', tone: 'Deep berry', category: 'layers', image: './assets/merlot-overshirt-photo.png', color: '#8a5960', description: 'The one piece that makes a simple outfit feel intentional.' },
-  { id: 'charcoal-trouser', name: 'Charcoal Trouser', type: 'Relaxed straight leg', tone: 'Graphite', category: 'bottoms', image: './assets/charcoal-trouser-photo.png', color: '#656a6d', description: 'A clean line with room to move through the day.' },
 ];
 
 const state = { filter: 'all', selectedId: 'navy-fuzzy-knit', activeId: null, detailId: null, look: new Set() };
@@ -97,7 +91,7 @@ function renderRack() {
   turnPlayers.forEach(player => player.destroy());
   turnPlayers.clear();
   const visible = visiblePieces();
-  document.querySelector('.rack-total').textContent = `${String(visible.length).padStart(2, '0')} PIECES`;
+  document.querySelector('.rack-total').textContent = `${String(visible.length).padStart(2, '0')} ${visible.length === 1 ? 'PIECE' : 'PIECES'}`;
   const rackWidth = `${Math.max(visible.length * 84 + 120, 650)}px`;
   rackItems.style.minWidth = rackWidth;
   document.querySelector('.rack-rail').style.minWidth = rackWidth;
@@ -132,7 +126,7 @@ function updateSelection({ scroll = false, focus = false } = {}) {
   document.querySelector('#rack-position').textContent = position;
   document.querySelector('#rack-current').textContent = state.activeId
     ? `${piece.name} · ${piece.price || 'Concept sample'}`
-    : 'HOVER A PIECE TO SEE IT TURN · CLICK FOR DETAILS';
+    : 'HOVER THE PIECE TO SEE IT TURN · CLICK FOR DETAILS';
   const add = document.querySelector('#add-to-look');
   const added = state.look.has(piece.id);
   add.disabled = added;
@@ -186,6 +180,7 @@ function wobbleRack(force = false) {
 
 function move(direction) {
   const visible = visiblePieces();
+  if (visible.length < 2) return;
   const index = visible.findIndex(piece => piece.id === state.selectedId);
   selectPiece(visible[(index + direction + visible.length) % visible.length].id, { scroll: true, focus: true });
 }
@@ -256,6 +251,7 @@ function closeDetail() {
 
 function moveDetail(direction) {
   const visible = visiblePieces();
+  if (visible.length < 2) return;
   const index = visible.findIndex(piece => piece.id === state.detailId);
   const piece = visible[(index + direction + visible.length) % visible.length];
   state.detailId = piece.id;

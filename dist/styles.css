@@ -213,3 +213,4 @@ body{background:radial-gradient(ellipse at 50% 12%,#f7fbff 0,#dfeefa 58%,#d3e4f1
 
 @media(max-width:600px){.garment-card.has-turn .hanger-assembly,.garment-card.has-turn.is-selected .hanger-assembly,.garment-card.has-turn.is-before .hanger-assembly{left:calc(50% - 120px);width:240px}.garment-card.has-turn .garment-art,.garment-card.has-turn .garment-photo,.garment-turn-canvas{width:240px;height:240px}.detail-overlay{padding:10px}.detail-dialog{max-height:96vh}.dialog-body{grid-template-columns:1fr}.dialog-visual{min-height:285px;padding:12px}.dialog-visual img{height:265px}.dialog-copy{padding:24px}.dialog-copy h2{font-size:32px}.dialog-bottom>span{display:none}}
 @media(prefers-reduced-motion:reduce){.garment-card:not(.has-turn) .hanger-assembly,.garment-turn-canvas,.detail-dialog,.dialog-visual img{animation:none!important}}
+[hidden]{display:none!important}
