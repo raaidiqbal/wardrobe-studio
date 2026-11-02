@@ -1,9 +1,9 @@
 # Wardrobe Studio
 
-Interactive clothing-rack frontend concept for an outfit assistant. The rack currently shows one Mutimer Shaggy Mohair Knit with a frame sequence from the supplied Kling clip. It rests side-on, turns toward the viewer on hover, and turns back on pointer leave. Clicking opens its detail view. The temporary "today's look" selection works in the browser.
+An interactive digital wardrobe with two owned pieces: a navy Mutimer Shaggy Mohair Knit and a cream Polo Ralph Lauren cashmere sweater. Both rest side-on on a chrome rail, turn toward the viewer on hover or selection, and open a larger detail view on click. The temporary "today's look" selection lives in the browser and resets on reload. There are no retail prices or shopping links.
 
 Run locally with a static server from `dist/`, for example `python -m http.server 4174 --directory dist`.
 
-The prototype has no AI service, clothing upload, account, or saved wardrobe. The knit's A$260 retail price and availability link reflect Mutimer's Australian listing at build time and may change. Other concept garments remain in source history but are absent from the current rack.
+This is a frontend concept. It does not yet have an AI service, garment upload, accounts, or a saved wardrobe.
 
-To process another square side-to-front clip, install `numpy` and `imageio-ffmpeg`, then run `python scripts/process_turn.py <video.mp4> dist/frames/<piece-id>`. The script detects motion onset and a pose close to the final frame, exports 480px WebPs, and writes a manifest. Inspect the chosen bounds and endpoint frames for each new clip before adding its `turnFrames` count to `dist/app.js`.
+To process another square side-to-front clip, install `numpy` and `imageio-ffmpeg`, then run `python scripts/process_turn.py <video.mp4> dist/frames/<piece-id>`. The script detects motion onset and a settled front pose, exports 480px WebP frames, and writes a manifest. Compare its turn direction with the existing pieces; add `--mirror` when it turns the other way. For pale garments whose final motion is subtle, adjust `--settle-tolerance` after inspecting the chosen endpoint. Keep an original, unmirrored front image for the final six-frame blend so logos and labels read correctly. Add the new frame count and assets to `dist/app.js`.

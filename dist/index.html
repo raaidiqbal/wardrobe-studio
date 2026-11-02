@@ -25,29 +25,29 @@
 
       <section class="rack-section" id="rack" aria-label="Interactive clothing rack">
         <div class="rack-toolbar">
-          <div class="rack-title"><span class="rack-title-line" aria-hidden="true"></span><span>THE RACK</span><span class="rack-total">01 PIECE</span></div>
+          <div class="rack-title"><span class="rack-title-line" aria-hidden="true"></span><span>THE RACK</span><span class="rack-total">02 PIECES</span></div>
           <div class="filters" role="group" aria-label="Filter clothing by type" hidden>
             <button type="button" class="filter is-active" data-filter="all" aria-pressed="true">All pieces</button>
             <button type="button" class="filter" data-filter="tops" aria-pressed="false">Tops</button>
             <button type="button" class="filter" data-filter="layers" aria-pressed="false">Layers</button>
             <button type="button" class="filter" data-filter="bottoms" aria-pressed="false">Bottoms</button>
           </div>
-          <div class="rack-nav" aria-label="Browse garments" hidden><button type="button" id="previous" aria-label="Previous garment">←</button><button type="button" id="next" aria-label="Next garment">→</button></div>
+          <div class="rack-nav" aria-label="Browse garments"><button type="button" id="previous" aria-label="Previous garment">←</button><button type="button" id="next" aria-label="Next garment">→</button></div>
         </div>
         <div class="rack-viewport" id="rack-viewport">
           <div class="rack-rail" aria-hidden="true"></div>
           <div class="rack-items" id="rack-items"></div>
           <div class="rack-floor" aria-hidden="true"></div>
         </div>
-        <div class="rack-footer"><span id="rack-current">HOVER THE PIECE TO SEE IT TURN · CLICK FOR DETAILS</span><span id="rack-position">01 / 01</span></div>
+        <div class="rack-footer"><span id="rack-current">HOVER A PIECE TO SEE IT TURN · CLICK FOR DETAILS</span><span id="rack-position">01 / 02</span></div>
       </section>
 
       <section class="detail-section" aria-label="Selected clothing and outfit">
         <div class="piece-detail" aria-live="polite">
-          <p class="eyebrow detail-eyebrow">IN FOCUS <span id="detail-index">01 / 01</span></p>
+          <p class="eyebrow detail-eyebrow">IN FOCUS <span id="detail-index">01 / 02</span></p>
           <div class="detail-head"><div><h2 id="detail-name">Navy Fuzzy Knit</h2><p id="detail-type">Textured sweater · Deep navy</p></div><div class="swatch" id="detail-swatch" aria-label="Garment color"></div></div>
           <p class="detail-description" id="detail-description">A soft, richly textured knit that gives a simple outfit some depth.</p>
-          <div class="detail-actions"><button type="button" id="add-to-look" class="add-button">Add to today's look <span aria-hidden="true">↗</span></button><span class="detail-tip" hidden>Use ← → to browse</span></div>
+          <div class="detail-actions"><button type="button" id="add-to-look" class="add-button">Add to today's look <span aria-hidden="true">↗</span></button><span class="detail-tip">Use ← → to browse</span></div>
         </div>
         <aside class="look-panel" id="look" aria-labelledby="look-title">
           <div class="look-heading"><div><p class="eyebrow">YOUR SELECTION</p><h2 id="look-title">Today's look<span>.</span></h2></div><span class="look-count" id="look-count">00</span></div>
@@ -57,7 +57,7 @@
       </section>
     </main>
 
-    <footer class="site-footer"><span>WARDROBE STUDIO / FRONTEND CONCEPT</span><span>One piece for now · Your own closet comes next</span></footer>
+    <footer class="site-footer"><span>WARDROBE STUDIO / FRONTEND CONCEPT</span><span>Your digital wardrobe · Two pieces so far</span></footer>
   </div>
   <div class="detail-overlay" id="detail-overlay" hidden>
     <div class="detail-backdrop" id="detail-backdrop"></div>
@@ -65,9 +65,9 @@
       <div class="dialog-top"><span>WARDROBE STUDIO / PIECE DETAILS</span><button type="button" id="modal-close" aria-label="Close details">Close <span aria-hidden="true">×</span></button></div>
       <div class="dialog-body">
         <div class="dialog-visual"><img id="modal-image" alt="" /></div>
-        <div class="dialog-copy"><p class="eyebrow" id="modal-counter">01 / 01</p><p class="dialog-kicker" id="modal-kicker"></p><h2 id="modal-name"></h2><p id="modal-description"></p><p class="dialog-price" id="modal-price"></p><a id="modal-availability" target="_blank" rel="noopener noreferrer">See availability <span aria-hidden="true">↗</span></a><span id="modal-sample-note" hidden>Concept sample · No retailer listing</span><button type="button" id="modal-add" class="dialog-add">Add to today's look <span aria-hidden="true">+</span></button></div>
+        <div class="dialog-copy"><p class="eyebrow" id="modal-counter">01 / 02</p><p class="dialog-kicker" id="modal-kicker"></p><h2 id="modal-name"></h2><p id="modal-description"></p><button type="button" id="modal-add" class="dialog-add">Add to today's look <span aria-hidden="true">+</span></button></div>
       </div>
-      <div class="dialog-bottom"><button type="button" id="modal-previous" aria-label="Previous piece" hidden>← <span>Previous</span></button><span>ESC TO CLOSE</span><button type="button" id="modal-next" aria-label="Next piece" hidden><span>Next</span> →</button></div>
+      <div class="dialog-bottom"><button type="button" id="modal-previous" aria-label="Previous piece">← <span>Previous</span></button><span>USE ← → TO BROWSE · ESC TO CLOSE</span><button type="button" id="modal-next" aria-label="Next piece"><span>Next</span> →</button></div>
     </section>
   </div>
 </body>

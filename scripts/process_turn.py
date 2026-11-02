@@ -9,7 +9,7 @@ import imageio_ffmpeg
 import numpy as np
 
 
-def inspect(video, fps=24, size=160):
+def inspect(video, fps=24, size=160, settle_tolerance=.02):
     command = [imageio_ffmpeg.get_ffmpeg_exe(), "-hide_banner", "-loglevel", "error", "-i", str(video),
                "-an", "-vf", f"fps={fps},scale={size}:{size}", "-pix_fmt", "rgb24", "-f", "rawvideo", "pipe:1"]
     raw = subprocess.check_output(command)
@@ -26,8 +26,8 @@ def inspect(video, fps=24, size=160):
     peak = float(np.quantile(motion, .9))
     active = np.flatnonzero(motion > max(.006, peak * .22))
     start = max(0, int(active[0]) - 2) if len(active) else 0
-    # First front pose within 2% of the final frame with little residual motion.
-    settled = (distance < .02) & (motion < .006)
+    # First front pose sufficiently close to the final frame with little residual motion.
+    settled = (distance < settle_tolerance) & (motion < .006)
     stable = np.flatnonzero(np.convolve(settled.astype(int), np.ones(4, dtype=int), 'valid') == 4)
     stable = stable[stable > start + 4]
     end = int(stable[0] + 3) if len(stable) else len(frames) - 1
@@ -38,15 +38,20 @@ def inspect(video, fps=24, size=160):
     return start, end
 
 
-def export(video, output, start, end, fps=24):
+def export(video, output, start, end, fps=24, mirror=False):
     output.mkdir(parents=True, exist_ok=True)
+    filters = [f"select='between(n,{start},{end})'"]
+    if mirror:
+        filters.append("hflip")
+    filters.append("scale=480:480:flags=lanczos")
     command = [imageio_ffmpeg.get_ffmpeg_exe(), "-hide_banner", "-loglevel", "error", "-i", str(video),
-               "-an", "-vf", f"select='between(n,{start},{end})',scale=480:480:flags=lanczos",
+               "-an", "-vf", ",".join(filters),
                "-vsync", "0", "-c:v", "libwebp", "-quality", "79", "-compression_level", "6",
                "-y", str(output / "%03d.webp")]
     subprocess.run(command, check=True)
     count = len(list(output.glob("*.webp")))
     (output / "manifest.json").write_text(json.dumps({"frames": count, "duration_ms": 1100,
+                                                       "mirrored": mirror,
                                                        "source_fps": fps, "source_start_frame": start,
                                                        "source_end_frame": end}, indent=2) + "\n")
     print(f"Exported {count} frames to {output}")
@@ -57,7 +62,9 @@ if __name__ == "__main__":
     parser.add_argument("video", type=Path)
     parser.add_argument("output", type=Path)
     parser.add_argument("--inspect-only", action="store_true")
+    parser.add_argument("--settle-tolerance", type=float, default=.02)
+    parser.add_argument("--mirror", action="store_true")
     args = parser.parse_args()
-    first, last = inspect(args.video)
+    first, last = inspect(args.video, settle_tolerance=args.settle_tolerance)
     if not args.inspect_only:
-        export(args.video, args.output, first, last)
+        export(args.video, args.output, first, last, mirror=args.mirror)

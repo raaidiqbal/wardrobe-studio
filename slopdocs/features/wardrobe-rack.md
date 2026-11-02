@@ -1,23 +1,24 @@
 # Wardrobe rack
 
-Decision: this is a static frontend concept for the outfit-assistant project. The current rack shows only the supplied navy Mutimer knit. No AI, accounts, uploads, or persistence are implied by the current UI.
+Decision: this is a digital wardrobe frontend with two user-supplied pieces, not a store. Do not add prices, retailer links, or shopping calls to action. The current outfit selection is browser-local and resets on reload; AI recommendations, uploads, accounts, and persistence are future work.
 
 ## Structure
 
-- `dist/index.html`: page shell, rack controls, selected-piece summary, today's look panel, and detail dialog.
-- `dist/styles.css`: rack layout, canvas blend with the dotted background, static fallback perspective, load-in/sway, dialog, responsive and reduced-motion rules.
-- `dist/app.js`: one video-turn product; frame player; hover, selection, detail, and in-memory look state. The older generic sample handling remains for later additions, but the six concept sample records were removed from `pieces`.
-- `scripts/process_turn.py`: motion-aware clip analysis and frame export, dependent on `numpy` and `imageio-ffmpeg`.
-- `dist/frames/navy-fuzzy-knit/`: 62 WebP frames at 480px, plus manifest. Source is the user-supplied 3.04 s, 24 fps Kling MP4, kept outside the deployed static directory.
+- `dist/index.html`: page shell, two-piece rack, selected-piece summary, today's look panel, and detail dialog.
+- `dist/styles.css`: chrome rail, close-packed side-on garments, canvas blend, slot expansion, detail dialog, responsive and reduced-motion styles.
+- `dist/app.js`: piece records, canvas turn players, hover and keyboard selection, detail navigation, and temporary outfit state.
+- `dist/frames/navy-fuzzy-knit/`: 62 WebP frames from the supplied navy Mutimer Kling clip.
+- `dist/frames/cream-polo-sweater/`: 57 mirrored WebP frames from the supplied cream Polo Ralph Lauren Kling clip.
+- `scripts/process_turn.py`: motion-aware frame extraction with `--settle-tolerance` and optional `--mirror`; uses `numpy` and `imageio-ffmpeg`.
 
-## Interaction decision
+## Interaction and media decisions
 
-The user supplied a short reel showing a tightly packed clothing rail: most garments face nearly sideways, while a hovered piece opens toward the viewer in its original rail position. The first prototype had widely spaced, mostly front-facing clothes and a large editorial hero, which missed that interaction. A later prototype had six generated concept samples plus the navy knit. The user then asked to remove every other garment and keep the knit exactly as it is. The current rack shows one side-on knit, centered on the same white dotted rack and chrome rail. Hover turns it forward and pointer leave reverses it; click opens the detail panel. Single-item filters and previous/next controls are hidden. The temporary look selection remains.
+The user supplied a reel of a tightly packed clothing rail. The first prototype spaced mostly front-facing garments like an editorial hero; a later version used six generated concept samples. Both missed the user's wardrobe goal. The rack now uses only the two owned pieces. Each starts side-on and turns in place on hover or selection, widening its slot so the other garment makes room. Clicking opens its front cutout in a dialog with a counter, description, arrows, Escape close, and a today's-look action.
 
-The navy Mutimer knit uses the supplied side/front hanger photos and a Kling turn clip. Frame analysis found motion begins at frame 0 and the front is settled by frame 61, rather than using a fixed time cut. The clip already turns in the correct direction and its embroidery reads correctly. Playback draws WebPs on a 480px canvas in about 1.1 seconds, forwards on hover and backwards on leave; direction can change mid-turn. The final six frames fade into the supplied unmirrored front photo. Missing target frames keep the previous drawing until loaded. The canvas uses `mix-blend-mode:multiply` to lose the white background. All canvas ancestors avoid z-index, transform, opacity, filter, and perspective; entrance animation runs on the canvas. The video includes its own black hanger, so the old SVG hanger is omitted for that piece. Reduced motion jumps between endpoints.
+Each clip was analyzed separately instead of cut at a fixed time. The navy clip uses source frames 0–61. The cream clip uses 0–56 with a stricter `.01` settle tolerance; its motion direction was opposite the navy, so its exported frames are horizontally mirrored. The player draws 480px WebPs on a canvas over about 1.1 seconds, forwards and backwards, and keeps drawing until the target frame loads. The last six frames blend into the original unmirrored front photo, restoring correct lettering and labels. The canvas uses `mix-blend-mode:multiply` to remove white. Its ancestors avoid z-index, transform, opacity, filter, and perspective; the load-in animation runs on the canvas itself. Both clips include their own hanger, so no SVG hanger overlays them. Reduced motion jumps to the endpoints.
 
-The knit's detail view uses a transparent cutout generated from the supplied front photo, retaining the black hanger. Its listed A$260 is a snapshot of the Australian product page, not live pricing. Clicking the piece opens a dialog with front image, counter, description, price, and official Mutimer availability link. Escape and the close button dismiss it. The current "Add to today's look" set resets on reload; it only demonstrates the frontend interaction. Later, records can point to user-owned photos and turn clips.
+The detail view uses transparent cutouts based on the supplied front photos. The cream cutout uses a white image surround to hide minor light edge fringe. Desktop rack arrow navigation must not let programmatic scrolling reselect the nearest garment; mobile scroll selection still chooses the garment nearest the viewport center after a manual swipe.
 
 ## Verification
 
-Use a desktop viewport and a 390px phone viewport. Check that only one garment appears, the count is 01 / 01, the knit's forward and reverse canvas frames work, hanger alignment, click-to-open dialog, Escape, look action, mobile centering, no document overflow, and reduced-motion endpoint changes. Static delivery needs `index.html`, `styles.css`, `app.js`, `assets/`, and `frames/` together.
+Check desktop and phone layouts, two side-on resting poses, same-direction turns, reverse on leave, arrow selection, detail previous/next and Escape, today's-look state, no retail links, reduced-motion endpoint changes, and no horizontal document overflow. Deliver `index.html`, `styles.css`, `app.js`, `assets/`, and `frames/` together.

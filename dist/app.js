@@ -1,5 +1,6 @@
 const pieces = [
-  { id: 'navy-fuzzy-knit', name: 'Shaggy Mohair Knit (Navy)', type: 'Mutimer · brushed mohair knit', tone: 'Deep navy', category: 'tops', image: './assets/navy-mutimer-front-cutout.png', trueFront: './assets/navy-mutimer-front.png', sideImage: './assets/navy-mutimer-side.png', turnFrames: 62, price: 'A$260', availabilityUrl: 'https://mutimer.co/products/shaggy-mohair-knit-navy', color: '#111a35', description: 'An oversized, slightly cropped navy sweater with a brushed mohair finish and chest embroidery.' },
+  { id: 'navy-fuzzy-knit', name: 'Shaggy Mohair Knit (Navy)', subtitle: 'Mutimer', type: 'Brushed mohair knit', tone: 'Deep navy', category: 'tops', image: './assets/navy-mutimer-front-cutout.png', trueFront: './assets/navy-mutimer-front.png', sideImage: './assets/navy-mutimer-side.png', turnFrames: 62, color: '#111a35', description: 'An oversized, slightly cropped navy sweater with a brushed mohair finish and chest embroidery.' },
+  { id: 'cream-polo-sweater', name: 'Cream Cashmere Sweater', subtitle: 'Polo Ralph Lauren', type: 'Cable-knit cashmere', tone: 'Cream', category: 'tops', image: './assets/cream-polo-front-cutout.png', trueFront: './assets/cream-polo-front.png', sideImage: './assets/cream-polo-side.png', turnFrames: 57, frameVersion: 'mirror-1', color: '#e9e3cf', description: 'A cream cable-knit sweater with a classic crew neck and textured sleeves.' },
 ];
 
 const state = { filter: 'all', selectedId: 'navy-fuzzy-knit', activeId: null, detailId: null, look: new Set() };
@@ -20,7 +21,7 @@ class TurnPlayer {
       const frame = new Image();
       frame.decoding = 'async';
       frame.addEventListener('load', () => this.draw());
-      frame.src = `./frames/${piece.id}/${String(i + 1).padStart(3, '0')}.webp`;
+      frame.src = `./frames/${piece.id}/${String(i + 1).padStart(3, '0')}.webp${piece.frameVersion ? `?v=${piece.frameVersion}` : ''}`;
       return frame;
     });
     this.trueFront = new Image();
@@ -96,7 +97,7 @@ function renderRack() {
   rackItems.style.minWidth = rackWidth;
   document.querySelector('.rack-rail').style.minWidth = rackWidth;
   document.querySelector('.rack-floor').style.minWidth = rackWidth;
-  rackItems.innerHTML = visible.map((piece, index) => `<div class="garment-slot" data-id="${piece.id}" style="--entry-delay:${index * 65}ms"><button type="button" class="garment-card${piece.category === 'bottoms' ? ' is-bottoms' : ''}${piece.turnFrames ? ' has-turn' : ''}" data-id="${piece.id}" aria-pressed="false" aria-label="View ${piece.name}"><span class="hanger-assembly"><span class="hanger-swing">${piece.turnFrames ? '' : hangerSvg(piece)}<span class="garment-art"><span class="garment-photo">${piece.turnFrames ? '<canvas class="garment-turn-canvas" width="480" height="480" aria-hidden="true"></canvas>' : `<img class="garment-front" src="${piece.image}" alt="" loading="eager" decoding="async"><img class="garment-side" src="${piece.sideImage || `./assets/${piece.id}-side.png`}" alt="" loading="eager" decoding="async">`}</span></span></span></span><span class="garment-label">${piece.name}<span class="garment-price">${piece.price || 'Concept sample'}</span></span></button></div>`).join('');
+  rackItems.innerHTML = visible.map((piece, index) => `<div class="garment-slot" data-id="${piece.id}" style="--entry-delay:${index * 65}ms"><button type="button" class="garment-card${piece.category === 'bottoms' ? ' is-bottoms' : ''}${piece.turnFrames ? ' has-turn' : ''}" data-id="${piece.id}" aria-pressed="false" aria-label="View ${piece.name}"><span class="hanger-assembly"><span class="hanger-swing">${piece.turnFrames ? '' : hangerSvg(piece)}<span class="garment-art"><span class="garment-photo">${piece.turnFrames ? '<canvas class="garment-turn-canvas" width="480" height="480" aria-hidden="true"></canvas>' : `<img class="garment-front" src="${piece.image}" alt="" loading="eager" decoding="async"><img class="garment-side" src="${piece.sideImage || `./assets/${piece.id}-side.png`}" alt="" loading="eager" decoding="async">`}</span></span></span></span><span class="garment-label">${piece.name}<span class="garment-subtitle">${piece.subtitle}</span></span></button></div>`).join('');
   visible.filter(piece => piece.turnFrames).forEach(piece => {
     const canvas = rackItems.querySelector(`.garment-card[data-id="${piece.id}"] canvas`);
     turnPlayers.set(piece.id, new TurnPlayer(canvas, piece));
@@ -125,8 +126,8 @@ function updateSelection({ scroll = false, focus = false } = {}) {
   document.querySelector('#detail-index').textContent = position;
   document.querySelector('#rack-position').textContent = position;
   document.querySelector('#rack-current').textContent = state.activeId
-    ? `${piece.name} · ${piece.price || 'Concept sample'}`
-    : 'HOVER THE PIECE TO SEE IT TURN · CLICK FOR DETAILS';
+    ? `${piece.name} · ${piece.subtitle}`
+    : 'HOVER A PIECE TO SEE IT TURN · CLICK FOR DETAILS';
   const add = document.querySelector('#add-to-look');
   const added = state.look.has(piece.id);
   add.disabled = added;
@@ -209,15 +210,10 @@ function renderDetail() {
   document.querySelector('#modal-kicker').textContent = `${piece.type} · ${piece.tone}`;
   document.querySelector('#modal-name').textContent = piece.name;
   document.querySelector('#modal-description').textContent = piece.description;
-  document.querySelector('#modal-price').textContent = piece.price || 'Concept sample';
   const image = document.querySelector('#modal-image');
   image.src = piece.image;
   image.alt = `${piece.name}, front view`;
-  const availability = document.querySelector('#modal-availability');
-  availability.hidden = !piece.availabilityUrl;
-  if (piece.availabilityUrl) availability.href = piece.availabilityUrl;
-  const sampleNote = document.querySelector('#modal-sample-note');
-  sampleNote.hidden = !!piece.availabilityUrl;
+  document.querySelector('.dialog-visual').classList.toggle('is-light', piece.id === 'cream-polo-sweater');
   const add = document.querySelector('#modal-add');
   add.disabled = state.look.has(piece.id);
   add.innerHTML = add.disabled ? 'Added to today\'s look <span aria-hidden="true">✓</span>' : 'Add to today\'s look <span aria-hidden="true">+</span>';
@@ -316,6 +312,7 @@ rackItems.addEventListener('keydown', event => {
 let scrollSettle;
 rackViewport.addEventListener('scroll', () => {
   wobbleRack();
+  if (window.innerWidth > 600) return;
   if (performance.now() < centerUntil) return;
   clearTimeout(scrollSettle);
   scrollSettle = setTimeout(() => {
