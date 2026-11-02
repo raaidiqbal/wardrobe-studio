@@ -1,5 +1,5 @@
 const pieces = [
-  { id: 'navy-fuzzy-knit', name: 'Shaggy Mohair Knit (Navy)', subtitle: 'Mutimer', type: 'Brushed mohair knit', tone: 'Deep navy', category: 'tops', image: './assets/navy-mutimer-front-cutout.png', trueFront: './assets/navy-mutimer-front.png', sideImage: './assets/navy-mutimer-side.png', turnFrames: 62, frameVersion: 'hook-aligned-1', alignHook: true, blendFinalFront: false, color: '#111a35', description: 'An oversized, slightly cropped navy sweater with a brushed mohair finish and chest embroidery.' },
+  { id: 'navy-fuzzy-knit', name: 'Shaggy Mohair Knit (Navy)', subtitle: 'Mutimer', type: 'Brushed mohair knit', tone: 'Deep navy', category: 'tops', image: './assets/navy-mutimer-front-cutout.png', sideImage: './assets/navy-mutimer-side.png', turnFrames: 62, frameVersion: 'hanger-stable-1', hangerTop: 40, blendFinalFront: false, color: '#111a35', description: 'An oversized, slightly cropped navy sweater with a brushed mohair finish and chest embroidery.' },
   { id: 'cream-polo-sweater', name: 'Cream Cashmere Sweater', subtitle: 'Polo Ralph Lauren', type: 'Cable-knit cashmere', tone: 'Cream', category: 'tops', image: './assets/cream-polo-front-cutout.png', trueFront: './assets/cream-polo-front.png', sideImage: './assets/cream-polo-side.png', turnFrames: 57, frameVersion: 'mirror-1', color: '#e9e3cf', description: 'A cream cable-knit sweater with a classic crew neck and textured sleeves.' },
 ];
 
@@ -17,20 +17,24 @@ class TurnPlayer {
     this.target = 0;
     this.lastTime = 0;
     this.raf = 0;
-    this.alignHook = Boolean(piece.alignHook);
+    this.hangerTop = piece.hangerTop;
     this.blendFinalFront = piece.blendFinalFront !== false;
+    this.hangerOffsets = [];
     this.hookOffsets = [];
-    if (this.alignHook) {
+    if (this.hangerTop != null) {
       this.measureCanvas = document.createElement('canvas');
       this.measureCanvas.width = 480;
-      this.measureCanvas.height = 36;
+      this.measureCanvas.height = 90;
       this.measureContext = this.measureCanvas.getContext('2d', { willReadFrequently: true });
     }
     this.frames = Array.from({ length: piece.turnFrames }, (_, i) => {
       const frame = new Image();
       frame.decoding = 'async';
       frame.addEventListener('load', () => {
-        if (this.alignHook) this.hookOffsets[i] = this.measureHookOffset(frame);
+        if (this.hangerTop != null) {
+          this.hangerOffsets[i] = this.measureHangerOffset(frame);
+          this.hookOffsets[i] = this.measureHookOffset();
+        }
         this.draw();
       });
       frame.src = `./frames/${piece.id}/${String(i + 1).padStart(3, '0')}.webp${piece.frameVersion ? `?v=${piece.frameVersion}` : ''}`;
@@ -39,7 +43,6 @@ class TurnPlayer {
     if (this.blendFinalFront) {
       this.trueFront = new Image();
       this.trueFront.addEventListener('load', () => {
-        if (this.alignHook) this.trueFrontOffset = this.measureHookOffset(this.trueFront);
         this.draw();
       });
       this.trueFront.src = piece.trueFront || piece.image;
@@ -47,11 +50,24 @@ class TurnPlayer {
     this.draw();
   }
 
-  measureHookOffset(frame) {
+  measureHangerOffset(frame) {
     const context = this.measureContext;
-    context.clearRect(0, 0, 480, 36);
+    context.clearRect(0, 0, 480, 90);
     context.drawImage(frame, 0, 0, 480, 480);
-    const { data } = context.getImageData(190, 0, 100, 36);
+    const { data } = context.getImageData(170, 20, 140, 70);
+    for (let y = 0; y < 70; y++) {
+      let darkPixels = 0;
+      for (let x = 0; x < 140; x++) {
+        const pixel = (y * 140 + x) * 4;
+        if (Math.max(data[pixel], data[pixel + 1], data[pixel + 2]) < 90) darkPixels++;
+      }
+      if (darkPixels >= 8) return y + 20 - this.hangerTop;
+    }
+    return 0;
+  }
+
+  measureHookOffset() {
+    const { data } = this.measureContext.getImageData(190, 0, 100, 36);
     for (let y = 0; y < 36; y++) {
       for (let x = 0; x < 100; x++) {
         const pixel = (y * 100 + x) * 4;
@@ -69,13 +85,23 @@ class TurnPlayer {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.fillStyle = '#fff';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
-    ctx.drawImage(frame, 0, -(this.hookOffsets[index] || 0), canvas.width, canvas.height);
+    ctx.drawImage(frame, 0, -(this.hangerOffsets[index] || 0), canvas.width, canvas.height);
+    if (this.hangerTop != null) {
+      // Keep the chrome hook on the rail independently of the hanger body.
+      ctx.fillRect(205, 0, 70, 39);
+      ctx.save();
+      ctx.beginPath();
+      ctx.rect(205, 0, 70, 39);
+      ctx.clip();
+      ctx.drawImage(frame, 0, -(this.hookOffsets[index] || 0), canvas.width, canvas.height);
+      ctx.restore();
+    }
     const blend = Math.max(0, (index - (this.frames.length - 6)) / 5);
     if (blend && this.blendFinalFront && this.trueFront.complete && this.trueFront.naturalWidth) {
       ctx.globalAlpha = blend;
       ctx.fillStyle = '#fff';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
-      ctx.drawImage(this.trueFront, 0, -(this.trueFrontOffset || 0), canvas.width, canvas.height);
+      ctx.drawImage(this.trueFront, 0, 0, canvas.width, canvas.height);
       ctx.globalAlpha = 1;
     }
     return true;
