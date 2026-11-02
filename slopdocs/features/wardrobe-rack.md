@@ -19,6 +19,8 @@ Each clip was analyzed separately instead of cut at a fixed time. The navy clip 
 
 The navy source clip has a vertical camera/garment drift: the hook starts at image row 0 but moves to row 9–12 during the first few turn frames, then stays around row 9. The separate true-front photo also places the hook at row 9 after resizing to the 480px canvas. This made the navy sweater dip early in the turn and again when the final photo fully replaced the last frame. For the navy piece only, the player samples the dark hook in the top center of each loaded frame and the true-front photo, and draws each shifted up by its own measured offset. It fills the canvas white first to preserve the white source matte at the bottom. Keep this registration if the navy frames are re-exported; remove it only if the new source itself holds a fixed hook position.
 
+The rail begins at rack-viewport row 39. With the navy canvas at row 38, aligning the hook to canvas row 0 left its crown effectively level with the rail; the front-facing pose still appeared to hang below it. The navy canvas container is now positioned at row 28 in every pose, so the hook crown sits about 11px above the bar without introducing any hover-driven vertical movement. The cream canvas retains its original position. The HTML includes an asset version query to force revalidation of the corrected CSS and player code after deployment.
+
 The detail view uses transparent cutouts based on the supplied front photos. The cream cutout uses a white image surround to hide minor light edge fringe. Desktop rack arrow navigation must not let programmatic scrolling reselect the nearest garment; mobile scroll selection still chooses the garment nearest the viewport center after a manual swipe.
 
 ## Verification
