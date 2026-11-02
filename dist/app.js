@@ -1,5 +1,5 @@
 const pieces = [
-  { id: 'navy-fuzzy-knit', name: 'Shaggy Mohair Knit (Navy)', subtitle: 'Mutimer', type: 'Brushed mohair knit', tone: 'Deep navy', category: 'tops', image: './assets/navy-mutimer-front-cutout.png', trueFront: './assets/navy-mutimer-front.png', sideImage: './assets/navy-mutimer-side.png', turnFrames: 62, frameVersion: 'hook-aligned-1', alignHook: true, color: '#111a35', description: 'An oversized, slightly cropped navy sweater with a brushed mohair finish and chest embroidery.' },
+  { id: 'navy-fuzzy-knit', name: 'Shaggy Mohair Knit (Navy)', subtitle: 'Mutimer', type: 'Brushed mohair knit', tone: 'Deep navy', category: 'tops', image: './assets/navy-mutimer-front-cutout.png', trueFront: './assets/navy-mutimer-front.png', sideImage: './assets/navy-mutimer-side.png', turnFrames: 62, frameVersion: 'hook-aligned-1', alignHook: true, blendFinalFront: false, color: '#111a35', description: 'An oversized, slightly cropped navy sweater with a brushed mohair finish and chest embroidery.' },
   { id: 'cream-polo-sweater', name: 'Cream Cashmere Sweater', subtitle: 'Polo Ralph Lauren', type: 'Cable-knit cashmere', tone: 'Cream', category: 'tops', image: './assets/cream-polo-front-cutout.png', trueFront: './assets/cream-polo-front.png', sideImage: './assets/cream-polo-side.png', turnFrames: 57, frameVersion: 'mirror-1', color: '#e9e3cf', description: 'A cream cable-knit sweater with a classic crew neck and textured sleeves.' },
 ];
 
@@ -18,6 +18,7 @@ class TurnPlayer {
     this.lastTime = 0;
     this.raf = 0;
     this.alignHook = Boolean(piece.alignHook);
+    this.blendFinalFront = piece.blendFinalFront !== false;
     this.hookOffsets = [];
     if (this.alignHook) {
       this.measureCanvas = document.createElement('canvas');
@@ -35,12 +36,14 @@ class TurnPlayer {
       frame.src = `./frames/${piece.id}/${String(i + 1).padStart(3, '0')}.webp${piece.frameVersion ? `?v=${piece.frameVersion}` : ''}`;
       return frame;
     });
-    this.trueFront = new Image();
-    this.trueFront.addEventListener('load', () => {
-      if (this.alignHook) this.trueFrontOffset = this.measureHookOffset(this.trueFront);
-      this.draw();
-    });
-    this.trueFront.src = piece.trueFront || piece.image;
+    if (this.blendFinalFront) {
+      this.trueFront = new Image();
+      this.trueFront.addEventListener('load', () => {
+        if (this.alignHook) this.trueFrontOffset = this.measureHookOffset(this.trueFront);
+        this.draw();
+      });
+      this.trueFront.src = piece.trueFront || piece.image;
+    }
     this.draw();
   }
 
@@ -68,7 +71,7 @@ class TurnPlayer {
     ctx.fillRect(0, 0, canvas.width, canvas.height);
     ctx.drawImage(frame, 0, -(this.hookOffsets[index] || 0), canvas.width, canvas.height);
     const blend = Math.max(0, (index - (this.frames.length - 6)) / 5);
-    if (blend && this.trueFront.complete && this.trueFront.naturalWidth) {
+    if (blend && this.blendFinalFront && this.trueFront.complete && this.trueFront.naturalWidth) {
       ctx.globalAlpha = blend;
       ctx.fillStyle = '#fff';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
