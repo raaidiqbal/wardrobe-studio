@@ -36,7 +36,10 @@ class TurnPlayer {
       return frame;
     });
     this.trueFront = new Image();
-    this.trueFront.addEventListener('load', () => this.draw());
+    this.trueFront.addEventListener('load', () => {
+      if (this.alignHook) this.trueFrontOffset = this.measureHookOffset(this.trueFront);
+      this.draw();
+    });
     this.trueFront.src = piece.trueFront || piece.image;
     this.draw();
   }
@@ -69,7 +72,7 @@ class TurnPlayer {
       ctx.globalAlpha = blend;
       ctx.fillStyle = '#fff';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
-      ctx.drawImage(this.trueFront, 0, 0, canvas.width, canvas.height);
+      ctx.drawImage(this.trueFront, 0, -(this.trueFrontOffset || 0), canvas.width, canvas.height);
       ctx.globalAlpha = 1;
     }
     return true;
