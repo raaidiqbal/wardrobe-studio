@@ -144,6 +144,7 @@ body{background:radial-gradient(ellipse at 50% 12%,#f7fbff 0,#dfeefa 58%,#d3e4f1
 .garment-label{position:absolute;top:314px;left:50%;width:190px;margin:0;transform:translateX(-50%);font-size:10px;letter-spacing:.03em;text-transform:none;font-weight:600;color:#737b7d;opacity:0;transition:opacity .3s}
 .garment-card.is-selected .garment-label{color:#4d5a60;opacity:1}
 .rack-floor{display:none}
+.rack-note{max-width:670px;margin:0 auto;padding:16px 24px 2px;text-align:center;font-size:12px;line-height:1.55;letter-spacing:0;color:#627073}
 .rack-footer{height:46px;border-top:0;justify-content:center;color:#8b9699}
 .rack-footer #rack-position{position:absolute;right:30px;color:#7c898d}
 .detail-section{margin:0 clamp(20px,4vw,56px);border-color:#e8ebeb;background:#fcfdfc}
