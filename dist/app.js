@@ -86,6 +86,8 @@ class TurnPlayer {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.fillStyle = '#fff';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
+    // The video matte is RGB 251–254; lift it to white before multiply blending.
+    ctx.filter = 'brightness(1.02)';
     ctx.drawImage(frame, 0, -(this.hangerOffsets[index] || 0), canvas.width, canvas.height);
     if (this.hangerTop != null) {
       // Keep the chrome hook on the rail independently of the hanger body.
@@ -110,6 +112,7 @@ class TurnPlayer {
       ctx.drawImage(this.trueFront, 0, 0, canvas.width, canvas.height);
       ctx.restore();
     }
+    ctx.filter = 'none';
     return true;
   }
 
