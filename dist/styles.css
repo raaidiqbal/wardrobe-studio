@@ -124,7 +124,7 @@ body{background:radial-gradient(ellipse at 50% 12%,#f7fbff 0,#dfeefa 58%,#d3e4f1
 .rack-rail::before{left:0}.rack-rail::after{right:0}
 .rack-items{display:flex;justify-content:center;height:344px;min-width:790px;padding:0 26px}
 .garment-slot{flex:0 0 84px;transition:flex-basis .68s cubic-bezier(.2,.72,.18,1)}
-.garment-slot.is-selected{flex-basis:210px}
+.garment-slot.is-expanded{flex-basis:210px}
 .garment-card{max-width:none;padding:0}
 .garment-card::before{top:47px;height:239px;left:4px;right:4px;background:none;border:1px solid #97a6b5;opacity:0}
 .garment-card.is-selected::before{opacity:0}

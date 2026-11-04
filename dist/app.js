@@ -4,18 +4,21 @@ const pieces = [
   { id: 'khushposh-leather-jacket-19', name: 'Khushposh Leather Jacket #19', subtitle: 'Full-grain sheep leather', type: 'Full-grain sheep leather jacket', tone: 'Black', category: 'layers', image: './assets/khushposh-jacket-19-front-cutout.png', trueFront: './assets/khushposh-jacket-19-front.png', sideImage: './assets/khushposh-jacket-19-side.png', turnFrames: 60, frameVersion: 'jacket-1', color: '#1c1c1e', description: 'A black full-grain sheep leather jacket with a pointed collar, zip front, and defined chest seam.' },
 ];
 
-const state = { filter: 'all', selectedId: 'navy-fuzzy-knit', activeId: null, detailId: null };
+const state = { filter: 'all', selectedId: 'navy-fuzzy-knit', activeId: null, detailId: null, expandedIds: new Set() };
 const rackItems = document.querySelector('#rack-items');
 const rackViewport = document.querySelector('#rack-viewport');
 const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
 const turnPlayers = new Map();
 
 class TurnPlayer {
-  constructor(canvas, piece) {
+  constructor(canvas, piece, onSettled) {
     this.canvas = canvas;
     this.ctx = canvas.getContext('2d');
+    this.onSettled = onSettled;
     this.progress = 0;
     this.target = 0;
+    this.settledTarget = null;
+    this.destroyed = false;
     this.lastTime = 0;
     this.raf = 0;
     this.hangerTop = piece.hangerTop;
@@ -33,11 +36,12 @@ class TurnPlayer {
       const frame = new Image();
       frame.decoding = 'async';
       frame.addEventListener('load', () => {
+        if (this.destroyed) return;
         if (this.hangerTop != null) {
           this.hangerOffsets[i] = this.measureHangerOffset(frame);
           this.hookOffsets[i] = this.measureHookOffset();
         }
-        this.draw();
+        this.settleIfReady(this.draw());
       });
       frame.src = `./frames/${piece.id}/${String(i + 1).padStart(3, '0')}.webp${piece.frameVersion ? `?v=${piece.frameVersion}` : ''}`;
       return frame;
@@ -45,7 +49,7 @@ class TurnPlayer {
     if (this.blendFinalFront) {
       this.trueFront = new Image();
       this.trueFront.addEventListener('load', () => {
-        this.draw();
+        if (!this.destroyed) this.settleIfReady(this.draw());
       });
       this.trueFront.src = piece.trueFront || piece.image;
     }
@@ -118,13 +122,23 @@ class TurnPlayer {
   }
 
   setTarget(front) {
-    this.target = front ? 1 : 0;
+    const target = front ? 1 : 0;
+    if (this.target !== target) this.settledTarget = null;
+    this.target = target;
     if (reduceMotion.matches) {
       this.progress = this.target;
-      this.draw();
+      this.settleIfReady(this.draw());
       return;
     }
+    if (this.progress === this.target && this.settledTarget === this.target) return;
     if (!this.raf) this.raf = requestAnimationFrame(time => this.tick(time));
+  }
+
+  settleIfReady(drawn) {
+    if (drawn && this.progress === this.target && this.settledTarget !== this.target) {
+      this.settledTarget = this.target;
+      this.onSettled?.(this.target === 1);
+    }
   }
 
   tick(time) {
@@ -137,10 +151,15 @@ class TurnPlayer {
     const drawn = this.draw();
     this.raf = this.progress !== this.target || !drawn
       ? requestAnimationFrame(next => this.tick(next)) : 0;
-    if (!this.raf) this.lastTime = 0;
+    if (!this.raf) {
+      this.lastTime = 0;
+      this.settleIfReady(drawn);
+    }
   }
 
   destroy() {
+    this.destroyed = true;
+    this.onSettled = null;
     if (this.raf) cancelAnimationFrame(this.raf);
   }
 }
@@ -160,6 +179,7 @@ function visiblePieces() {
 function renderRack() {
   turnPlayers.forEach(player => player.destroy());
   turnPlayers.clear();
+  state.expandedIds.clear();
   const visible = visiblePieces();
   document.querySelector('.rack-total').textContent = `${String(visible.length).padStart(2, '0')} ${visible.length === 1 ? 'PIECE' : 'PIECES'}`;
   const rackWidth = `${Math.max(visible.length * 84 + 120, 650)}px`;
@@ -169,7 +189,12 @@ function renderRack() {
   rackItems.innerHTML = visible.map((piece, index) => `<div class="garment-slot" data-id="${piece.id}" style="--entry-delay:${index * 65}ms"><button type="button" class="garment-card${piece.category === 'bottoms' ? ' is-bottoms' : ''}${piece.turnFrames ? ' has-turn' : ''}" data-id="${piece.id}" aria-pressed="false" aria-label="View ${piece.name}"><span class="hanger-assembly"><span class="hanger-swing">${piece.turnFrames ? '' : hangerSvg(piece)}<span class="garment-art"><span class="garment-photo">${piece.turnFrames ? '<canvas class="garment-turn-canvas" width="480" height="480" aria-hidden="true"></canvas>' : `<img class="garment-front" src="${piece.image}" alt="" loading="eager" decoding="async"><img class="garment-side" src="${piece.sideImage || `./assets/${piece.id}-side.png`}" alt="" loading="eager" decoding="async">`}</span></span></span></span><span class="garment-label">${piece.name}<span class="garment-subtitle">${piece.subtitle}</span></span></button></div>`).join('');
   visible.filter(piece => piece.turnFrames).forEach(piece => {
     const canvas = rackItems.querySelector(`.garment-card[data-id="${piece.id}"] canvas`);
-    turnPlayers.set(piece.id, new TurnPlayer(canvas, piece));
+    turnPlayers.set(piece.id, new TurnPlayer(canvas, piece, front => {
+      if (!front && state.activeId !== piece.id) {
+        state.expandedIds.delete(piece.id);
+        rackItems.querySelector(`.garment-slot[data-id="${piece.id}"]`)?.classList.remove('is-expanded');
+      }
+    }));
   });
   updateSelection();
 }
@@ -181,6 +206,7 @@ function updateSelection({ scroll = false, focus = false } = {}) {
   rackItems.querySelectorAll('.garment-slot').forEach((slot, index) => {
     const selected = visible[index].id === state.activeId;
     slot.classList.toggle('is-selected', selected);
+    slot.classList.toggle('is-expanded', state.expandedIds.has(visible[index].id));
     const button = slot.querySelector('button');
     button.classList.toggle('is-selected', selected);
     button.classList.toggle('is-before', index < selectedIndex);
@@ -221,6 +247,7 @@ function selectPiece(id, options = {}) {
   clearTimeout(centerRetry);
   state.selectedId = id;
   state.activeId = id;
+  state.expandedIds.add(id);
   updateSelection(options);
   if (options.scroll && window.innerWidth <= 600 && !reduceMotion.matches) {
     // The slot widens after selection; center again once its transition finishes.
