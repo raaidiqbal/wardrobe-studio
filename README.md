@@ -1,6 +1,6 @@
 # Wardrobe Studio
 
-An interactive digital wardrobe with two owned pieces: a navy Mutimer Shaggy Mohair Knit and a cream Polo Ralph Lauren cashmere sweater. Both rest side-on on a chrome rail, turn toward the viewer on hover or selection, and open a larger detail view on click. The garment in focus fills the lower half of the rack page. "Today's look" is a separate placeholder page for a future outfit generation feature. There are no retail prices or shopping links.
+An interactive digital wardrobe with three owned pieces: a navy Mutimer Shaggy Mohair Knit, a cream Polo Ralph Lauren cashmere sweater, and Khushposh Leather Jacket #19 in full-grain sheep leather. All three rest side-on on a chrome rail, turn toward the viewer on hover or selection, and open a larger detail view on click. The garment in focus fills the lower half of the rack page. "Today's look" is a separate placeholder page for a future outfit generation feature. There are no retail prices or shopping links.
 
 Run locally with a static server from `dist/`, for example `python -m http.server 4174 --directory dist`.
 

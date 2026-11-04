@@ -1,6 +1,7 @@
 const pieces = [
   { id: 'navy-fuzzy-knit', name: 'Shaggy Mohair Knit (Navy)', subtitle: 'Mutimer', type: 'Brushed mohair knit', tone: 'Deep navy', category: 'tops', image: './assets/navy-mutimer-front-cutout.png', sideImage: './assets/navy-mutimer-side.png', turnFrames: 62, frameVersion: 'hanger-stable-1', hangerTop: 40, blendFinalFront: false, color: '#111a35', description: 'An oversized, slightly cropped navy sweater with a brushed mohair finish and chest embroidery.' },
   { id: 'cream-polo-sweater', name: 'Cream Cashmere Sweater', subtitle: 'Polo Ralph Lauren', type: 'Cable-knit cashmere', tone: 'Cream', category: 'tops', image: './assets/cream-polo-front-cutout.png', trueFront: './assets/cream-polo-front.png', labelPatch: { x: 222, y: 94, width: 37, height: 17 }, sideImage: './assets/cream-polo-side.png', turnFrames: 57, frameVersion: 'mirror-1', color: '#e9e3cf', description: 'A cream cable-knit sweater with a classic crew neck and textured sleeves.' },
+  { id: 'khushposh-leather-jacket-19', name: 'Khushposh Leather Jacket #19', subtitle: 'Full-grain sheep leather', type: 'Full-grain sheep leather jacket', tone: 'Black', category: 'layers', image: './assets/khushposh-jacket-19-front-cutout.png', trueFront: './assets/khushposh-jacket-19-front.png', sideImage: './assets/khushposh-jacket-19-side.png', turnFrames: 60, frameVersion: 'jacket-1', color: '#1c1c1e', description: 'A black full-grain sheep leather jacket with a pointed collar, zip front, and defined chest seam.' },
 ];
 
 const state = { filter: 'all', selectedId: 'navy-fuzzy-knit', activeId: null, detailId: null };
@@ -208,16 +209,27 @@ function centerInRack(button) {
   const buttonRect = button.getBoundingClientRect();
   const rackRect = rackViewport.getBoundingClientRect();
   const left = rackViewport.scrollLeft + buttonRect.left - rackRect.left - (rackViewport.clientWidth - buttonRect.width) / 2;
-  centerUntil = performance.now() + 900;
+  clearTimeout(scrollSettle);
+  centerUntil = performance.now() + 1800;
   rackViewport.scrollTo({ left, behavior: reduceMotion.matches ? 'instant' : 'smooth' });
 }
 
 let centerUntil = 0;
+let centerRetry = 0;
 function selectPiece(id, options = {}) {
   if (!visiblePieces().some(piece => piece.id === id)) return;
+  clearTimeout(centerRetry);
   state.selectedId = id;
   state.activeId = id;
   updateSelection(options);
+  if (options.scroll && window.innerWidth <= 600 && !reduceMotion.matches) {
+    // The slot widens after selection; center again once its transition finishes.
+    centerRetry = setTimeout(() => {
+      if (state.selectedId === id && performance.now() < centerUntil) {
+        centerInRack(rackItems.querySelector(`.garment-card[data-id="${id}"]`));
+      }
+    }, 720);
+  }
   wobbleRack(true);
 }
 
@@ -356,6 +368,12 @@ rackItems.addEventListener('keydown', event => {
   }
 });
 let scrollSettle;
+function releaseProgrammaticScroll() {
+  centerUntil = 0;
+  clearTimeout(centerRetry);
+}
+rackViewport.addEventListener('pointerdown', releaseProgrammaticScroll, { passive: true });
+rackViewport.addEventListener('wheel', releaseProgrammaticScroll, { passive: true });
 rackViewport.addEventListener('scroll', () => {
   wobbleRack();
   if (window.innerWidth > 600) return;
