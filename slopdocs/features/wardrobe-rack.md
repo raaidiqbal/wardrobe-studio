@@ -1,19 +1,20 @@
 # Wardrobe rack
 
-Decision: this is a digital wardrobe frontend with two user-supplied pieces, not a store. Do not add prices, retailer links, or shopping calls to action. The current outfit selection is browser-local and resets on reload; AI recommendations, uploads, accounts, and persistence are future work.
+Decision: this is a digital wardrobe frontend with two user-supplied pieces, not a store. Do not add prices, retailer links, or shopping calls to action. AI recommendations, uploads, accounts, and persistence are future work. "Today's look" has its own `look.html` page with a truthful placeholder for outfit generation; it is no longer a browser-local selection panel on the rack.
 
 ## Structure
 
-- `dist/index.html`: page shell, two-piece rack, selected-piece summary, today's look panel, and detail dialog.
+- `dist/index.html`: page shell, two-piece rack, full-width selected-piece summary, and detail dialog.
+- `dist/look.html`: separate future home for outfit generation, currently a static placeholder.
 - `dist/styles.css`: chrome rail, close-packed side-on garments, canvas blend, slot expansion, detail dialog, responsive and reduced-motion styles.
-- `dist/app.js`: piece records, canvas turn players, hover and keyboard selection, detail navigation, and temporary outfit state.
+- `dist/app.js`: piece records, canvas turn players, hover and keyboard selection, and detail navigation.
 - `dist/frames/navy-fuzzy-knit/`: 62 WebP frames from the supplied navy Mutimer Kling clip.
 - `dist/frames/cream-polo-sweater/`: 57 mirrored WebP frames from the supplied cream Polo Ralph Lauren Kling clip.
 - `scripts/process_turn.py`: motion-aware frame extraction with `--settle-tolerance` and optional `--mirror`; uses `numpy` and `imageio-ffmpeg`.
 
 ## Interaction and media decisions
 
-The user supplied a reel of a tightly packed clothing rail. The first prototype spaced mostly front-facing garments like an editorial hero; a later version used six generated concept samples. Both missed the user's wardrobe goal. The rack now uses only the two owned pieces. Each starts side-on and turns in place on hover or selection, widening its slot so the other garment makes room. Clicking opens its front cutout in a dialog with a counter, description, arrows, Escape close, and a today's-look action.
+The user supplied a reel of a tightly packed clothing rail. The first prototype spaced mostly front-facing garments like an editorial hero; a later version used six generated concept samples. Both missed the user's wardrobe goal. The rack now uses only the two owned pieces. Each starts side-on and turns in place on hover or selection, widening its slot so the other garment makes room. Clicking opens its front cutout in a dialog with a counter, description, arrows, and Escape close. The "In focus" area now spans the entire lower half below the rack, with garment metadata and a large cutout. The small adjoining "Today's look" panel and its add buttons were removed because outfit generation belongs to the separate page and is not implemented yet.
 
 Each clip was analyzed separately instead of cut at a fixed time. The navy clip uses source frames 0–61. The cream clip uses 0–56 with a stricter `.01` settle tolerance; its motion direction was opposite the navy, so its exported frames are horizontally mirrored. The player draws 480px WebPs on a canvas over about 1.1 seconds, forwards and backwards, and keeps drawing until the target frame loads. Blending the entire cream frame into the original unmirrored front photo made the whole sweater visibly flip at the endpoint. The cream clip now holds its mirrored final frame and blends only the tiny neck-label rectangle from the true front over its last six frames. This restores readable lettering without changing the garment silhouette or hook direction. The navy clip already has readable lettering, so it holds on its final video frame without any still-image blend. The canvas uses `mix-blend-mode:multiply` to remove white. Its ancestors avoid z-index, transform, opacity, filter, and perspective; the load-in animation runs on the canvas itself. Both clips include their own hanger, so no SVG hanger overlays them. Reduced motion jumps to the endpoints.
 
@@ -27,4 +28,4 @@ The detail view uses transparent cutouts based on the supplied front photos. The
 
 ## Verification
 
-Check desktop and phone layouts, two side-on resting poses, same-direction turns, reverse on leave, arrow selection, detail previous/next and Escape, today's-look state, no retail links, reduced-motion endpoint changes, and no horizontal document overflow. Deliver `index.html`, `styles.css`, `app.js`, `assets/`, and `frames/` together.
+Check desktop and phone layouts, two side-on resting poses, same-direction turns, reverse on leave, arrow selection, full-width focus area, detail previous/next and Escape, navigation to and from `look.html`, no retail links or fake outfit actions, reduced-motion endpoint changes, and no horizontal document overflow. Deliver `index.html`, `look.html`, `styles.css`, `app.js`, `assets/`, and `frames/` together.

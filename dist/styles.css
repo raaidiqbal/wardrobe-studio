@@ -215,3 +215,37 @@ body{background:radial-gradient(ellipse at 50% 12%,#f7fbff 0,#dfeefa 58%,#d3e4f1
 [hidden]{display:none!important}
 .dialog-visual.is-light{background:#fff}
 .dialog-add{margin-top:28px}
+
+/* The rack's lower half belongs entirely to the garment in focus. */
+.detail-section{display:block;margin-top:0;min-height:370px}
+.piece-detail{display:grid;grid-template-columns:minmax(0,1fr) minmax(250px,.7fr);align-items:center;gap:36px;min-height:370px;padding:32px clamp(30px,5vw,70px);border:0}
+.focus-copy{max-width:610px}
+.detail-eyebrow,.detail-head{max-width:none}
+.detail-head{margin-top:28px}
+.detail-head h2{font-size:clamp(34px,4.3vw,54px)}
+.detail-description{max-width:570px}
+.focus-visual{display:grid;place-items:center;height:310px;min-width:0;background:radial-gradient(ellipse at center,#f0f4f5 0,transparent 70%)}
+.focus-visual img{display:block;max-width:100%;max-height:310px;object-fit:contain}
+.detail-actions{margin-top:30px}
+
+.look-page{min-height:calc(100vh - 170px);padding:clamp(48px,8vw,100px) clamp(24px,7vw,90px)}
+.look-page .eyebrow{color:#657f8d}
+.look-page h1{max-width:780px;margin:22px 0 0;font-size:clamp(54px,8vw,104px)}
+.look-intro{max-width:570px;margin-top:28px;color:#5d6a70;font-size:17px;line-height:1.65}
+.look-placeholder{margin-top:clamp(55px,10vw,120px);padding:28px 0;border-top:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:25px}
+.look-placeholder p{max-width:540px;color:#738086;font-size:13px;line-height:1.6}
+.look-placeholder a{white-space:nowrap;border:1px solid #aab9bc;padding:13px 18px;font-size:12px;font-weight:700}
+.look-placeholder a:hover{background:var(--ink);color:white;border-color:var(--ink)}
+
+@media(max-width:600px){
+  .detail-section{min-height:0}
+  .piece-detail{grid-template-columns:1fr;gap:8px;min-height:0;padding:30px 23px 18px}
+  .detail-head{margin-top:20px}
+  .detail-head h2{font-size:34px}
+  .focus-visual{height:225px;order:-1}
+  .focus-visual img{max-height:225px}
+  .look-page{min-height:calc(100vh - 140px);padding:56px 24px}
+  .look-placeholder{display:block}
+  .look-placeholder a{display:inline-block;margin-top:20px}
+  .site-footer{display:flex;flex-direction:column;gap:7px}
+}

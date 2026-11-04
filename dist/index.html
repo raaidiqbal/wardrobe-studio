@@ -6,14 +6,14 @@
   <meta name="theme-color" content="#f6f4ef" />
   <meta name="description" content="An interactive digital wardrobe concept. Browse clothing on a rack and turn each piece toward you." />
   <title>Wardrobe Studio — The Rack</title>
-  <link rel="stylesheet" href="./styles.css?v=wardrobe-note-7" />
-  <script src="./app.js?v=white-matte-8" defer></script>
+  <link rel="stylesheet" href="./styles.css?v=full-focus-9" />
+  <script src="./app.js?v=full-focus-9" defer></script>
 </head>
 <body>
   <div class="site-shell">
     <header class="site-header">
-      <a class="wordmark" href="#top" aria-label="Wardrobe Studio, back to top">wardrobe<span>.</span></a>
-      <nav aria-label="Main navigation"><a class="active" href="#rack">The rack</a><a href="#look">Today's look <span id="nav-count">0</span></a></nav>
+      <a class="wordmark" href="./" aria-label="Wardrobe Studio, back to rack">wardrobe<span>.</span></a>
+      <nav aria-label="Main navigation"><a class="active" href="./#rack" aria-current="page">The rack</a><a href="./look.html">Today's look</a></nav>
       <div class="header-note"><span class="status-dot" aria-hidden="true"></span> INTERACTIVE CONCEPT</div>
     </header>
 
@@ -43,18 +43,16 @@
         <div class="rack-footer"><span id="rack-current">HOVER A PIECE TO SEE IT TURN · CLICK FOR DETAILS</span><span id="rack-position">01 / 02</span></div>
       </section>
 
-      <section class="detail-section" aria-label="Selected clothing and outfit">
+      <section class="detail-section" aria-label="Garment in focus">
         <div class="piece-detail" aria-live="polite">
-          <p class="eyebrow detail-eyebrow">IN FOCUS <span id="detail-index">01 / 02</span></p>
-          <div class="detail-head"><div><h2 id="detail-name">Navy Fuzzy Knit</h2><p id="detail-type">Textured sweater · Deep navy</p></div><div class="swatch" id="detail-swatch" aria-label="Garment color"></div></div>
-          <p class="detail-description" id="detail-description">A soft, richly textured knit that gives a simple outfit some depth.</p>
-          <div class="detail-actions"><button type="button" id="add-to-look" class="add-button">Add to today's look <span aria-hidden="true">↗</span></button><span class="detail-tip">Use ← → to browse</span></div>
+          <div class="focus-copy">
+            <p class="eyebrow detail-eyebrow">IN FOCUS <span id="detail-index">01 / 02</span></p>
+            <div class="detail-head"><div><h2 id="detail-name">Shaggy Mohair Knit (Navy)</h2><p id="detail-type">Brushed mohair knit · Deep navy</p></div><div class="swatch" id="detail-swatch" aria-label="Garment color"></div></div>
+            <p class="detail-description" id="detail-description">An oversized, slightly cropped navy sweater with a brushed mohair finish and chest embroidery.</p>
+            <div class="detail-actions"><button type="button" id="focus-open" class="add-button">View piece details <span aria-hidden="true">↗</span></button><span class="detail-tip">Use ← → to browse the rack</span></div>
+          </div>
+          <div class="focus-visual" aria-hidden="true"><img id="detail-image" src="./assets/navy-mutimer-front-cutout.png" alt="" /></div>
         </div>
-        <aside class="look-panel" id="look" aria-labelledby="look-title">
-          <div class="look-heading"><div><p class="eyebrow">YOUR SELECTION</p><h2 id="look-title">Today's look<span>.</span></h2></div><span class="look-count" id="look-count">00</span></div>
-          <div id="look-content" class="look-content"><p>Nothing picked yet. Your outfit starts with one good piece.</p></div>
-          <button type="button" class="clear-button" id="clear-look" hidden>Clear selection <span aria-hidden="true">×</span></button>
-        </aside>
       </section>
     </main>
 
@@ -66,7 +64,7 @@
       <div class="dialog-top"><span>WARDROBE STUDIO / PIECE DETAILS</span><button type="button" id="modal-close" aria-label="Close details">Close <span aria-hidden="true">×</span></button></div>
       <div class="dialog-body">
         <div class="dialog-visual"><img id="modal-image" alt="" /></div>
-        <div class="dialog-copy"><p class="eyebrow" id="modal-counter">01 / 02</p><p class="dialog-kicker" id="modal-kicker"></p><h2 id="modal-name"></h2><p id="modal-description"></p><button type="button" id="modal-add" class="dialog-add">Add to today's look <span aria-hidden="true">+</span></button></div>
+        <div class="dialog-copy"><p class="eyebrow" id="modal-counter">01 / 02</p><p class="dialog-kicker" id="modal-kicker"></p><h2 id="modal-name"></h2><p id="modal-description"></p></div>
       </div>
       <div class="dialog-bottom"><button type="button" id="modal-previous" aria-label="Previous piece">← <span>Previous</span></button><span>USE ← → TO BROWSE · ESC TO CLOSE</span><button type="button" id="modal-next" aria-label="Next piece"><span>Next</span> →</button></div>
     </section>

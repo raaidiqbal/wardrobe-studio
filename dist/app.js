@@ -3,7 +3,7 @@ const pieces = [
   { id: 'cream-polo-sweater', name: 'Cream Cashmere Sweater', subtitle: 'Polo Ralph Lauren', type: 'Cable-knit cashmere', tone: 'Cream', category: 'tops', image: './assets/cream-polo-front-cutout.png', trueFront: './assets/cream-polo-front.png', labelPatch: { x: 222, y: 94, width: 37, height: 17 }, sideImage: './assets/cream-polo-side.png', turnFrames: 57, frameVersion: 'mirror-1', color: '#e9e3cf', description: 'A cream cable-knit sweater with a classic crew neck and textured sleeves.' },
 ];
 
-const state = { filter: 'all', selectedId: 'navy-fuzzy-knit', activeId: null, detailId: null, look: new Set() };
+const state = { filter: 'all', selectedId: 'navy-fuzzy-knit', activeId: null, detailId: null };
 const rackItems = document.querySelector('#rack-items');
 const rackViewport = document.querySelector('#rack-viewport');
 const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
@@ -188,6 +188,7 @@ function updateSelection({ scroll = false, focus = false } = {}) {
   document.querySelector('#detail-name').textContent = piece.name;
   document.querySelector('#detail-type').textContent = `${piece.type} · ${piece.tone}`;
   document.querySelector('#detail-description').textContent = piece.description;
+  document.querySelector('#detail-image').src = piece.image;
   document.querySelector('#detail-swatch').style.background = piece.color;
   document.querySelector('#detail-swatch').setAttribute('aria-label', `${piece.tone} color swatch`);
   const position = `${String(selectedIndex + 1).padStart(2, '0')} / ${String(visible.length).padStart(2, '0')}`;
@@ -196,10 +197,6 @@ function updateSelection({ scroll = false, focus = false } = {}) {
   document.querySelector('#rack-current').textContent = state.activeId
     ? `${piece.name} · ${piece.subtitle}`
     : 'HOVER A PIECE TO SEE IT TURN · CLICK FOR DETAILS';
-  const add = document.querySelector('#add-to-look');
-  const added = state.look.has(piece.id);
-  add.disabled = added;
-  add.innerHTML = added ? 'Added to today\'s look <span aria-hidden="true">✓</span>' : 'Add to today\'s look <span aria-hidden="true">↗</span>';
   const button = rackItems.querySelector(`.garment-card[data-id="${piece.id}"]`);
   turnPlayers.forEach((player, id) => player.setTarget(id === state.activeId));
   if (scroll && button) centerInRack(button);
@@ -254,17 +251,6 @@ function move(direction) {
   selectPiece(visible[(index + direction + visible.length) % visible.length].id, { scroll: true, focus: true });
 }
 
-function renderLook() {
-  const selected = pieces.filter(piece => state.look.has(piece.id));
-  document.querySelector('#look-count').textContent = String(selected.length).padStart(2, '0');
-  document.querySelector('#nav-count').textContent = selected.length;
-  document.querySelector('#clear-look').hidden = selected.length === 0;
-  document.querySelector('#look-content').innerHTML = selected.length
-    ? `<ul class="look-items">${selected.map(piece => `<li><span class="mini-swatch" style="background:${piece.color}"></span>${piece.name}</li>`).join('')}</ul>`
-    : '<p>Nothing picked yet. Your outfit starts with one good piece.</p>';
-  updateSelection();
-}
-
 const detailOverlay = document.querySelector('#detail-overlay');
 let detailReturnFocus = null;
 let restoringFocus = false;
@@ -282,9 +268,6 @@ function renderDetail() {
   image.src = piece.image;
   image.alt = `${piece.name}, front view`;
   document.querySelector('.dialog-visual').classList.toggle('is-light', piece.id === 'cream-polo-sweater');
-  const add = document.querySelector('#modal-add');
-  add.disabled = state.look.has(piece.id);
-  add.innerHTML = add.disabled ? 'Added to today\'s look <span aria-hidden="true">✓</span>' : 'Add to today\'s look <span aria-hidden="true">+</span>';
 }
 
 function openDetail(id) {
@@ -327,11 +310,6 @@ document.querySelector('#modal-close').addEventListener('click', closeDetail);
 document.querySelector('#detail-backdrop').addEventListener('click', closeDetail);
 document.querySelector('#modal-previous').addEventListener('click', () => moveDetail(-1));
 document.querySelector('#modal-next').addEventListener('click', () => moveDetail(1));
-document.querySelector('#modal-add').addEventListener('click', () => {
-  state.look.add(state.detailId);
-  renderLook();
-  renderDetail();
-});
 document.addEventListener('keydown', event => {
   if (!state.detailId) return;
   if (event.key === 'Escape') { event.preventDefault(); closeDetail(); }
@@ -409,17 +387,9 @@ document.querySelectorAll('.filter').forEach(button => button.addEventListener('
   renderRack();
   updateSelection({ scroll: true });
 }));
-document.querySelector('#add-to-look').addEventListener('click', () => {
-  state.look.add(state.selectedId);
-  renderLook();
-});
-document.querySelector('#clear-look').addEventListener('click', () => {
-  state.look.clear();
-  renderLook();
-});
+document.querySelector('#focus-open').addEventListener('click', () => openDetail(state.selectedId));
 
 renderRack();
-renderLook();
 if (window.innerWidth <= 600) {
   requestAnimationFrame(() => centerInRack(rackItems.querySelector(`.garment-card[data-id="${state.selectedId}"]`)));
 }
