@@ -1,21 +1,22 @@
 # Wardrobe rack
 
-Decision: this is a digital wardrobe frontend with three user-supplied pieces, not a store. Do not add prices, retailer links, or shopping calls to action. AI recommendations, uploads, accounts, and persistence are future work. "Today's look" has its own `look.html` page with a truthful placeholder for outfit generation; it is no longer a browser-local selection panel on the rack.
+Decision: this is a digital wardrobe frontend with four user-supplied pieces, not a store. Do not add prices, retailer links, or shopping calls to action. AI recommendations, uploads, accounts, and persistence are future work. "Today's look" has its own `look.html` page with a truthful placeholder for outfit generation; it is no longer a browser-local selection panel on the rack.
 
 ## Structure
 
-- `dist/index.html`: page shell, three-piece rack, full-width selected-piece summary, and detail dialog.
+- `dist/index.html`: page shell, four-piece rack, full-width selected-piece summary, and detail dialog.
 - `dist/look.html`: separate future home for outfit generation, currently a static placeholder.
 - `dist/styles.css`: chrome rail, close-packed side-on garments, canvas blend, slot expansion, detail dialog, responsive and reduced-motion styles.
 - `dist/app.js`: piece records, canvas turn players, hover and keyboard selection, and detail navigation.
 - `dist/frames/navy-fuzzy-knit/`: 62 WebP frames from the supplied navy Mutimer Kling clip.
 - `dist/frames/cream-polo-sweater/`: 57 mirrored WebP frames from the supplied cream Polo Ralph Lauren Kling clip.
 - `dist/frames/khushposh-leather-jacket-19/`: 60 unmirrored WebP frames from the supplied Khushposh Kling clip.
+- `dist/frames/cream-pleated-trousers/`: 62 unmirrored WebP frames from the supplied cream trouser Kling clip.
 - `scripts/process_turn.py`: motion-aware frame extraction with `--settle-tolerance` and optional `--mirror`; uses `numpy` and `imageio-ffmpeg`.
 
 ## Interaction and media decisions
 
-The user supplied a reel of a tightly packed clothing rail. The first prototype spaced mostly front-facing garments like an editorial hero; a later version used six generated concept samples. Both missed the user's wardrobe goal. The rack now uses only the three owned pieces. Each starts side-on and turns in place on hover or selection, widening its slot so the other garments make room. Clicking opens its front cutout in a dialog with a counter, description, arrows, and Escape close. The "In focus" area now spans the entire lower half below the rack, with garment metadata and a large cutout. The small adjoining "Today's look" panel and its add buttons were removed because outfit generation belongs to the separate page and is not implemented yet.
+The user supplied a reel of a tightly packed clothing rail. The first prototype spaced mostly front-facing garments like an editorial hero; a later version used six generated concept samples. Both missed the user's wardrobe goal. The rack now uses only the four owned pieces. Each starts side-on and turns in place on hover or selection, widening its slot so the other garments make room. Clicking opens its front cutout in a dialog with a counter, description, arrows, and Escape close. The "In focus" area now spans the entire lower half below the rack, with garment metadata and a large cutout. The small adjoining "Today's look" panel and its add buttons were removed because outfit generation belongs to the separate page and is not implemented yet.
 
 Slot expansion is independent of active selection. When focus or hover moves to another piece, the previous slot stays wide while its canvas reverses to the side pose. `TurnPlayer` reports completion only after the target frame has actually drawn; then the old slot contracts. This also handles a direct move between adjacent pieces, when both slots briefly remain wide. A frame still loading must not collapse the space early. Under reduced motion, the endpoint draws immediately when available, then releases the slot.
 
@@ -24,6 +25,8 @@ Each clip was analyzed separately instead of cut at a fixed time. The navy clip 
 The navy source clip has a vertical camera/garment drift. In the user's screen recording, the metal hook stays near the rail while the black plastic hanger and sweater drop below it as the garment opens. The hook starts at image row 0 but moves to row 9–12, while the plastic hanger top moves from row 40 to row 54. The cream hanger top moves only about 5px. For the navy piece only, the player samples the dark plastic hanger top (first row with at least eight dark pixels across the center strip) and draws the sweater frame shifted to keep that top at row 40. It then restores a narrow strip of the original chrome hook independently, aligned to row 0. The two regions overlap at the neck so the hook stays connected to the hanger. It fills the canvas white first to preserve the white source matte. Keep this registration if the navy frames are re-exported; remove it only if the new source itself holds a fixed hanger position.
 
 The Khushposh clip's useful motion is native frames 6–65 at 24 fps; `process_turn.py` finds these by motion and settle analysis, then exports 60 WebPs. Its side pose and early front reveal match the navy and already-mirrored cream direction, so it stays unmirrored. Its hanger is steady enough to use the normal canvas path. The true supplied front photo blends across the last six frames, hiding a small Kling watermark near the lower right of the video and giving a clean final pose without a mirrored silhouette change. The detail/focus cutout was generated by background extraction from the supplied front photo; preserve the original front and side assets alongside it.
+
+The cream trouser clip's useful motion is native frames 5–66 at 24 fps, exported as 62 WebPs. Comparing hanger angle across the sequence with the leather jacket showed the same side-to-front direction, so it stays unmirrored. The metal hook is about 30 source pixels below the top of the 480px video frame; `frameOffsetY: 30` lifts the entire video image so the hook sits on the chrome rail. Its hook position drifts only about 3px between first and last frame. Its supplied front still differs enough from the video pose that `blendFinalFront: false` avoids a jump at the end. Use the transparent cutout only in the focus and detail views. No brand was supplied; the descriptive name avoids inventing one. Preserve the original front and side photos.
 
 Both video sequences have an almost-white RGB 251–254 matte. On the dotted rack, `mix-blend-mode:multiply` made that matte a visible gray rectangle. The canvas player applies a 1.02 brightness filter while drawing each frame and the tiny cream label patch, bringing the matte to pure white before the multiply blend. The filter is reset after each draw. Keep the canvas CSS blend so the rack dots remain visible around the garment.
 
@@ -35,4 +38,4 @@ With three pieces, the phone-width arrow navigation initially reselected a neigh
 
 ## Verification
 
-Check desktop and phone layouts, three side-on resting poses, same-direction turns, reverse on leave, hanger contact, arrow selection, full-width focus area, detail previous/next and Escape, navigation to and from `look.html`, no retail links or fake outfit actions, reduced-motion endpoint changes, and no horizontal document overflow. Deliver `index.html`, `look.html`, `styles.css`, `app.js`, `assets/`, and `frames/` together.
+Check desktop and phone layouts, four side-on resting poses, same-direction turns, reverse on leave, hanger contact, arrow selection, full-width focus area, detail previous/next and Escape, navigation to and from `look.html`, no retail links or fake outfit actions, reduced-motion endpoint changes, and no horizontal document overflow. Deliver `index.html`, `look.html`, `styles.css`, `app.js`, `assets/`, and `frames/` together.

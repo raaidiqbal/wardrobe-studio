@@ -2,6 +2,7 @@ const pieces = [
   { id: 'navy-fuzzy-knit', name: 'Shaggy Mohair Knit (Navy)', subtitle: 'Mutimer', type: 'Brushed mohair knit', tone: 'Deep navy', category: 'tops', image: './assets/navy-mutimer-front-cutout.png', sideImage: './assets/navy-mutimer-side.png', turnFrames: 62, frameVersion: 'hanger-stable-1', hangerTop: 40, blendFinalFront: false, color: '#111a35', description: 'An oversized, slightly cropped navy sweater with a brushed mohair finish and chest embroidery.' },
   { id: 'cream-polo-sweater', name: 'Cream Cashmere Sweater', subtitle: 'Polo Ralph Lauren', type: 'Cable-knit cashmere', tone: 'Cream', category: 'tops', image: './assets/cream-polo-front-cutout.png', trueFront: './assets/cream-polo-front.png', labelPatch: { x: 222, y: 94, width: 37, height: 17 }, sideImage: './assets/cream-polo-side.png', turnFrames: 57, frameVersion: 'mirror-1', color: '#e9e3cf', description: 'A cream cable-knit sweater with a classic crew neck and textured sleeves.' },
   { id: 'khushposh-leather-jacket-19', name: 'Khushposh Leather Jacket #19', subtitle: 'Full-grain sheep leather', type: 'Full-grain sheep leather jacket', tone: 'Black', category: 'layers', image: './assets/khushposh-jacket-19-front-cutout.png', trueFront: './assets/khushposh-jacket-19-front.png', sideImage: './assets/khushposh-jacket-19-side.png', turnFrames: 60, frameVersion: 'jacket-1', color: '#1c1c1e', description: 'A black full-grain sheep leather jacket with a pointed collar, zip front, and defined chest seam.' },
+  { id: 'cream-pleated-trousers', name: 'Cream Pleated Trousers', subtitle: 'Wide-leg', type: 'Pleated trousers', tone: 'Cream', category: 'bottoms', image: './assets/cream-pleated-trousers-front-cutout.png', sideImage: './assets/cream-pleated-trousers-side.png', turnFrames: 62, frameVersion: 'trousers-1', frameOffsetY: 30, blendFinalFront: false, color: '#eae7df', description: 'Cream wide-leg trousers with soft front pleats, angled pockets, and a gold button.' },
 ];
 
 const state = { filter: 'all', selectedId: 'navy-fuzzy-knit', activeId: null, detailId: null, expandedIds: new Set() };
@@ -22,6 +23,7 @@ class TurnPlayer {
     this.lastTime = 0;
     this.raf = 0;
     this.hangerTop = piece.hangerTop;
+    this.frameOffsetY = piece.frameOffsetY || 0;
     this.blendFinalFront = piece.blendFinalFront !== false;
     this.labelPatch = piece.labelPatch;
     this.hangerOffsets = [];
@@ -93,7 +95,7 @@ class TurnPlayer {
     ctx.fillRect(0, 0, canvas.width, canvas.height);
     // The video matte is RGB 251–254; lift it to white before multiply blending.
     ctx.filter = 'brightness(1.02)';
-    ctx.drawImage(frame, 0, -(this.hangerOffsets[index] || 0), canvas.width, canvas.height);
+    ctx.drawImage(frame, 0, -this.frameOffsetY - (this.hangerOffsets[index] || 0), canvas.width, canvas.height);
     if (this.hangerTop != null) {
       // Keep the chrome hook on the rail independently of the hanger body.
       ctx.fillRect(205, 0, 70, 39);
@@ -186,7 +188,7 @@ function renderRack() {
   rackItems.style.minWidth = rackWidth;
   document.querySelector('.rack-rail').style.minWidth = rackWidth;
   document.querySelector('.rack-floor').style.minWidth = rackWidth;
-  rackItems.innerHTML = visible.map((piece, index) => `<div class="garment-slot" data-id="${piece.id}" style="--entry-delay:${index * 65}ms"><button type="button" class="garment-card${piece.category === 'bottoms' ? ' is-bottoms' : ''}${piece.turnFrames ? ' has-turn' : ''}" data-id="${piece.id}" aria-pressed="false" aria-label="View ${piece.name}"><span class="hanger-assembly"><span class="hanger-swing">${piece.turnFrames ? '' : hangerSvg(piece)}<span class="garment-art"><span class="garment-photo">${piece.turnFrames ? '<canvas class="garment-turn-canvas" width="480" height="480" aria-hidden="true"></canvas>' : `<img class="garment-front" src="${piece.image}" alt="" loading="eager" decoding="async"><img class="garment-side" src="${piece.sideImage || `./assets/${piece.id}-side.png`}" alt="" loading="eager" decoding="async">`}</span></span></span></span><span class="garment-label">${piece.name}<span class="garment-subtitle">${piece.subtitle}</span></span></button></div>`).join('');
+  rackItems.innerHTML = visible.map((piece, index) => `<div class="garment-slot" data-id="${piece.id}" style="--entry-delay:${index * 65}ms"><button type="button" class="garment-card${piece.category === 'bottoms' && !piece.turnFrames ? ' is-bottoms' : ''}${piece.turnFrames ? ' has-turn' : ''}" data-id="${piece.id}" aria-pressed="false" aria-label="View ${piece.name}"><span class="hanger-assembly"><span class="hanger-swing">${piece.turnFrames ? '' : hangerSvg(piece)}<span class="garment-art"><span class="garment-photo">${piece.turnFrames ? '<canvas class="garment-turn-canvas" width="480" height="480" aria-hidden="true"></canvas>' : `<img class="garment-front" src="${piece.image}" alt="" loading="eager" decoding="async"><img class="garment-side" src="${piece.sideImage || `./assets/${piece.id}-side.png`}" alt="" loading="eager" decoding="async">`}</span></span></span></span><span class="garment-label">${piece.name}<span class="garment-subtitle">${piece.subtitle}</span></span></button></div>`).join('');
   visible.filter(piece => piece.turnFrames).forEach(piece => {
     const canvas = rackItems.querySelector(`.garment-card[data-id="${piece.id}"] canvas`);
     turnPlayers.set(piece.id, new TurnPlayer(canvas, piece, front => {
@@ -306,7 +308,7 @@ function renderDetail() {
   const image = document.querySelector('#modal-image');
   image.src = piece.image;
   image.alt = `${piece.name}, front view`;
-  document.querySelector('.dialog-visual').classList.toggle('is-light', piece.id === 'cream-polo-sweater');
+  document.querySelector('.dialog-visual').classList.toggle('is-light', piece.id === 'cream-polo-sweater' || piece.id === 'cream-pleated-trousers');
 }
 
 function openDetail(id) {

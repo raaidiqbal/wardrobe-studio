@@ -6,8 +6,8 @@
   <meta name="theme-color" content="#f6f4ef" />
   <meta name="description" content="An interactive digital wardrobe concept. Browse clothing on a rack and turn each piece toward you." />
   <title>Wardrobe Studio — The Rack</title>
-  <link rel="stylesheet" href="./styles.css?v=turn-spacing-12" />
-  <script src="./app.js?v=turn-spacing-12" defer></script>
+  <link rel="stylesheet" href="./styles.css?v=cream-trousers-13" />
+  <script src="./app.js?v=cream-trousers-13" defer></script>
 </head>
 <body>
   <div class="site-shell">
@@ -25,7 +25,7 @@
 
       <section class="rack-section" id="rack" aria-label="Interactive clothing rack">
         <div class="rack-toolbar">
-          <div class="rack-title"><span class="rack-title-line" aria-hidden="true"></span><span>THE RACK</span><span class="rack-total">03 PIECES</span></div>
+          <div class="rack-title"><span class="rack-title-line" aria-hidden="true"></span><span>THE RACK</span><span class="rack-total">04 PIECES</span></div>
           <div class="filters" role="group" aria-label="Filter clothing by type" hidden>
             <button type="button" class="filter is-active" data-filter="all" aria-pressed="true">All pieces</button>
             <button type="button" class="filter" data-filter="tops" aria-pressed="false">Tops</button>
@@ -40,13 +40,13 @@
           <div class="rack-floor" aria-hidden="true"></div>
         </div>
         <p class="rack-note">Creating each garment’s images and turn animation is costly, so I’m adding pieces from my wardrobe as I can. Thanks for following along.</p>
-        <div class="rack-footer"><span id="rack-current">HOVER A PIECE TO SEE IT TURN · CLICK FOR DETAILS</span><span id="rack-position">01 / 03</span></div>
+        <div class="rack-footer"><span id="rack-current">HOVER A PIECE TO SEE IT TURN · CLICK FOR DETAILS</span><span id="rack-position">01 / 04</span></div>
       </section>
 
       <section class="detail-section" aria-label="Garment in focus">
         <div class="piece-detail" aria-live="polite">
           <div class="focus-copy">
-            <p class="eyebrow detail-eyebrow">IN FOCUS <span id="detail-index">01 / 03</span></p>
+            <p class="eyebrow detail-eyebrow">IN FOCUS <span id="detail-index">01 / 04</span></p>
             <div class="detail-head"><div><h2 id="detail-name">Shaggy Mohair Knit (Navy)</h2><p id="detail-type">Brushed mohair knit · Deep navy</p></div><div class="swatch" id="detail-swatch" aria-label="Garment color"></div></div>
             <p class="detail-description" id="detail-description">An oversized, slightly cropped navy sweater with a brushed mohair finish and chest embroidery.</p>
             <div class="detail-actions"><button type="button" id="focus-open" class="add-button">View piece details <span aria-hidden="true">↗</span></button><span class="detail-tip">Use ← → to browse the rack</span></div>
@@ -56,7 +56,7 @@
       </section>
     </main>
 
-    <footer class="site-footer"><span>WARDROBE STUDIO / FRONTEND CONCEPT</span><span>Your digital wardrobe · Three pieces so far</span></footer>
+    <footer class="site-footer"><span>WARDROBE STUDIO / FRONTEND CONCEPT</span><span>Your digital wardrobe · Four pieces so far</span></footer>
   </div>
   <div class="detail-overlay" id="detail-overlay" hidden>
     <div class="detail-backdrop" id="detail-backdrop"></div>
@@ -64,7 +64,7 @@
       <div class="dialog-top"><span>WARDROBE STUDIO / PIECE DETAILS</span><button type="button" id="modal-close" aria-label="Close details">Close <span aria-hidden="true">×</span></button></div>
       <div class="dialog-body">
         <div class="dialog-visual"><img id="modal-image" alt="" /></div>
-        <div class="dialog-copy"><p class="eyebrow" id="modal-counter">01 / 03</p><p class="dialog-kicker" id="modal-kicker"></p><h2 id="modal-name"></h2><p id="modal-description"></p></div>
+        <div class="dialog-copy"><p class="eyebrow" id="modal-counter">01 / 04</p><p class="dialog-kicker" id="modal-kicker"></p><h2 id="modal-name"></h2><p id="modal-description"></p></div>
       </div>
       <div class="dialog-bottom"><button type="button" id="modal-previous" aria-label="Previous piece">← <span>Previous</span></button><span>USE ← → TO BROWSE · ESC TO CLOSE</span><button type="button" id="modal-next" aria-label="Next piece"><span>Next</span> →</button></div>
     </section>
