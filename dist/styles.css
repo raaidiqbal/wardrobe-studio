@@ -183,6 +183,7 @@ body{background:radial-gradient(ellipse at 50% 12%,#f7fbff 0,#dfeefa 58%,#d3e4f1
 .garment-card.has-turn .garment-art{left:0;top:0;width:260px;height:260px;transform:none;z-index:auto}
 .garment-card.has-turn .garment-photo{width:260px;height:260px}
 .garment-turn-canvas{display:block;width:260px;height:260px;mix-blend-mode:multiply;animation:canvas-arrival .8s cubic-bezier(.2,.7,.2,1) var(--entry-delay,0ms) both}
+.garment-card.has-turn[data-id="cream-pleated-trousers"] .hanger-assembly{top:30px}
 @keyframes rail-arrival{from{opacity:0;translate:0 -32px}to{opacity:1;translate:0 0}}
 @keyframes canvas-arrival{from{opacity:0;transform:translateY(-32px)}to{opacity:1;transform:translateY(0)}}
 

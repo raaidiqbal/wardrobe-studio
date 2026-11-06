@@ -1,0 +1,5 @@
+# Trouser hook clipped at the rail
+
+Root cause: a pixel scan used to align the new trouser hanger counted rows only when more than two dark pixels appeared in a wide center strip. The metal hook is one or two pixels wide, so the scan reported the black plastic hanger at source row 29 instead of the actual hook beginning near row 2. The resulting `frameOffsetY: 30` shifted the whole video upward inside a fixed 480px canvas, clipping away the hook. The black hanger then appeared to sit directly on or through the chrome rod.
+
+Fix: remove the internal 30px image shift. Position only the trouser canvas assembly 8px higher than the shared row 38, at row 30. Its 2–5px source hook start now renders above the row 39 chrome rail while the black hanger starts below it. An initial row 18 position left the hanger body intersecting the rail in the front pose. Check both side and front endpoints: the hook is narrow in both and the full turn must retain the same vertical registration. The original video frames are unchanged.
